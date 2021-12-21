@@ -82,16 +82,24 @@ import { precompileTemplate } from '@ember/template-compilation';
 import { setComponentTemplate } from '@ember/component';
 import templateOnlyComponent from '@ember/component/template-only';
 import { trackedFunction } from 'ember-resources';
+import { compileJS } from 'ember-repl';
 
 export default class DemoRenderer extends Component {
 
   compiledDemos = trackedFunction(this, async () => {
-    // some logic with babel, potentially utilizing ember-repl
+    let demos = await Promise.all(
+      this.args.demos.map(async ({ name, code }) => {
+        let { component, name, error } = await compileJS(code);
 
-    return {
-      [demo1]: compiledDemo1,
-      [demo2]: compiledDemo2,
-    };
+        return { name, component };
+      })
+    );
+
+    return demos.reduce((map, info) => {
+      map[info.name] = info.component;
+
+      return map;
+    }, {});
   });
 
   @cached
