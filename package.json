@@ -1,0 +1,10 @@
+{
+  "name": "glimdown",
+  "version": "0.0.0",
+  "description": "A plugin for the Unified ecosystem for using glimmer/ember with markdown",
+  "main": "index.js",
+  "repository": "git@github.com:NullVoxPopuli/glimdown.git",
+  "author": "NullVoxPopuli",
+  "license": "MIT",
+  "private": true
+}
