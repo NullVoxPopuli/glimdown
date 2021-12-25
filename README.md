@@ -119,3 +119,9 @@ export default class DemoRenderer extends Component {
 ```hbs
 <this.rendered />
 ```
+
+## References
+
+- https://github.com/remarkjs/remark/discussions/922
+- https://github.com/micromark/micromark#extending-markdown
+- https://github.com/mdx-js/mdx + https://mdxjs.com/packages/
