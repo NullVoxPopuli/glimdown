@@ -1,0 +1,444 @@
+@top Document { (entity | DoctypeDecl)* }
+
+entity[@isGroup=Entity] {
+  Comment | 
+  IfBlock |
+  UnlessBlock |
+  EachBlock |
+  LetBlock |
+  KeyBlock |
+  RawHTMLBlock |
+  DebugBlock |
+  ConstBlock |
+  Interpolation |
+  UnknownBlock |
+  Text |
+  EntityReference |
+  CharacterReference |
+  InvalidEntity |
+  Element |
+  ProcessingInst |
+  IncompleteCloseTag |
+  MismatchedCloseTag |
+  NoMatchCloseTag
+}
+
+Comment { ShortComment | LongComment | HTMLComment }
+ShortComment { shortCommentStart shortCommentContent* shortCommentEnd } 
+LongComment { longCommentStart longCommentContent* longCommentEnd }
+HTMLComment { htmlCommentStart htmlCommentContent* htmlCommentEnd }
+
+IfBlock[group=Block] {
+  IfBlockOpen (AmbiguousElseBlock | ElseBlock | entity)* IfBlockClose
+}
+
+UnlessBlock[group=Block] {
+  UnlessBlockOpen (AmbiguousElseBlock | ElseBlock | entity)* UnlessBlockClose
+}
+
+LetBlock[group=Block] {
+  LetBlockOpen (entity)* LetBlockClose
+}
+
+
+EachBlock[group=Block] {
+  EachBlockOpen (ElseBlock | entity)* EachBlockClose
+}
+
+KeyBlock[group=Block] {
+  KeyBlockOpen entity* KeyBlockClose
+}
+
+Element {
+  OpenScriptTag ScriptText (CloseScriptTag | missingCloseTag) |
+  OpenStyleTag StyleText (CloseStyleTag | missingCloseTag) |
+  OpenTextareaTag TextareaText (CloseTextareaTag | missingCloseTag) |
+  OpenTag entity* (CloseTag | missingCloseTag) |
+  SelfClosingTag
+}
+
+ScriptText[group="TextContent Entity"] { scriptText* }
+
+StyleText[group="TextContent Entity"] { styleText* }
+
+TextareaText[group="TextContent Entity"] { textareaText* }
+
+
+@skip { space } {
+  OpenTag[closedBy=CloseTag] {
+    StartTag elementName attr* EndTag
+  }
+
+  SelfClosingTag {
+    StartSelfClosingTag TagName attr* EndTag |
+    StartTag elementName attr* SelfClosingEndTag
+  }
+
+  MismatchedCloseTag {
+    MismatchedStartCloseTag elementName EndTag
+  }
+
+  NoMatchCloseTag[@name=CloseTag] {
+    NoMatchStartCloseTag elementName EndTag
+  }
+
+  CloseTag[openedBy=OpenTag] {
+    StartCloseTag elementName EndTag
+  }
+
+  OpenScriptTag[@name=OpenTag,closedBy=CloseTag] {
+    StartScriptTag TagName attr* EndTag
+  }
+
+  CloseScriptTag[@name=CloseTag,openedBy=OpenTag] {
+    StartCloseScriptTag TagName EndTag
+  }
+
+  OpenStyleTag[@name=OpenTag,closedBy=CloseTag] {
+    StartStyleTag TagName attr* EndTag
+  }
+
+  CloseStyleTag[@name=CloseTag,openedBy=OpenTag] {
+    StartCloseStyleTag TagName EndTag
+  }
+
+  OpenTextareaTag[@name=OpenTag,closedBy=CloseTag] {
+    StartTextareaTag TagName attr* EndTag
+  }
+
+  CloseTextareaTag[@name=CloseTag,openedBy=OpenTag] {
+    StartCloseTextareaTag TagName EndTag
+  }
+
+  attr {
+    Modifier |
+    StyleAttribute |
+    Attribute
+  }
+
+  Modifier {
+    "{{" (ModifierValue { identifier })? "}}"
+  }
+
+  StyleAttribute {
+    StyleAttributeName (Is (AttributeValue | UnquotedAttributeValue))?
+  }
+
+  Attribute {
+    AttributeName
+    ("|" Modifier)*
+    (Is (AttributeValue | UnquotedAttributeValue))?
+  }
+
+  UnlessBlockOpen[group=BlockOpen,closedBy=UnlessBlockClose] {
+    "{{" pfx<"#"> blk<"unless"> Expression "}}"
+  }
+  
+  UnlessBlockClose[group=BlockClose,openedBy=UnlessBlockOpen] {
+    "{{" pfx<"/"> blk<"unless"> "}}"
+  }
+  
+  IfBlockOpen[group=BlockOpen,closedBy=IfBlockClose] {
+    "{{" pfx<"#"> blk<"if"> Expression "}}"
+  }
+  
+  IfBlockClose[group=BlockClose,openedBy=IfBlockOpen] {
+    "{{" pfx<"/"> blk<"if"> "}}"
+  }
+  
+  ElseBlock[group=BlockInline] {
+    "{{" pfx<":"> blk<"else"> (kw<"if"> Expression)? "}}"
+  }
+
+  EachBlockOpen[group=BlockOpen,closedBy=EachBlockClose] {
+    "{{" pfx<"#"> blk<"each">
+    Expression
+    kw<"as">
+    "}}"
+  }
+  
+  EachBlockClose[group=BlockClose,openedBy=EachBlockOpen] {
+    "{{" pfx<"/"> blk<"each"> "}}"
+  }
+
+  LetBlockOpen[group=BlockOpen,closedBy=LetBlockClose] {
+    "{{" pfx<"#"> blk<"let">
+    Expression
+    kw<"as">
+    "|" (Variable)* "|"
+    "}}"
+  }
+  
+  LetBlockClose[group=BlockClose,openedBy=LetBlockOpen] {
+    "{{" pfx<"/"> blk<"let"> "}}"
+  }
+
+  KeyBlockOpen[group=BlockOpen,closedBy=KeyBlockClose] {
+    "{{" pfx<"#"> blk<"key"> Expression "}}"
+  }
+  
+  KeyBlockClose[group=BlockClose,openedBy=KeyBlockOpen] {
+    "{{" pfx<"/"> blk<"key"> "}}"
+  }
+
+  RawHTMLBlock[group=BlockInline] {
+    "{{" pfx<"@"> blk<"html"> Expression "}}"
+  }
+
+  DebugBlock[group=BlockInline] {
+    "{{" pfx<"@"> blk<"debug"> Variable ("," Variable)* "}}"
+  }
+
+  ConstBlock[group=BlockInline] {
+    "{{" pfx<"@"> blk<"const"> Expression "}}"
+  }
+
+  UnknownBlock[group=BlockInline] {
+    "{{"
+    BlockPrefix
+    BlockType
+    UnknownBlockContent?
+    "}}"
+  }
+  
+  Interpolation {
+    "{{" Value "}}"
+  }
+
+  Value {
+    ThisExpression 
+    | MemberExpression 
+    | CallExpression
+    | identifier 
+    | String 
+  }
+
+  CallExpression {
+    (identifier | Builtin) list<Value>
+  }
+
+  MemberExpression {
+    identifier ("." identifier)?
+  }
+
+  ThisExpression {
+    kw<"this"> "." MemberExpression*
+  }
+
+  SubExpression { 
+   "(" Value ")"
+  }
+
+  SExpression {
+    (Value | SubExpression)*
+  }
+
+
+  AmbiguousElseBlock[group=BlockInline] {
+    "{{" blk<"else"> (kw<"if"> Expression)? "}}"
+  }
+}
+
+elementName {
+  TagName |
+  ComponentName
+}
+
+Builtin {
+  kw<"on"> |
+  kw<"let"> |
+  kw<"debugger"> |
+  kw<"log"> |
+  kw<"each"> |
+  kw<"if"> |
+  kw<"unless"> |
+  kw<"fn"> |
+  kw<"modifier"> |
+  kw<"helper"> |
+  kw<"component"> |
+  kw<"yield"> |
+  kw<"outlet">
+}
+
+String {
+  "\"" attributeValueContentDouble? "\"" |
+  "\'" attributeValueContentSingle? "\'"
+}
+
+AttributeValue {
+  Interpolation | String
+}
+
+attributeValueContentDouble[@name=AttributeValueContent] {
+  (attributeValueContentCharDouble | attributeValueContentEntity)+
+}
+
+attributeValueContentSingle[@name=AttributeValueContent] {
+  (attributeValueContentCharSingle | attributeValueContentEntity)+
+}
+
+attributeValueContentEntity {
+  EntityReference |
+  CharacterReference |
+  Interpolation |
+  InvalidEntity
+}
+
+@context elementContext from "./html-tokens.js"
+
+@external tokens scriptTokens from "./html-tokens.js" {
+  scriptText
+  StartCloseScriptTag[@name=StartCloseTag,closedBy=EndTag]
+}
+
+@external tokens styleTokens from "./html-tokens.js" {
+  styleText
+  StartCloseStyleTag[@name=StartCloseTag,closedBy=EndTag]
+}
+
+@external tokens textareaTokens from "./html-tokens.js" {
+  textareaText
+  StartCloseTextareaTag[@name=StartCloseTag,closedBy=EndTag]
+}
+
+@external tokens tagStart from "./html-tokens.js" {
+  StartTag[closedBy="EndTag SelfClosingEndTag"],
+  StartScriptTag[@name=StartTag,closedBy=EndTag],
+  StartStyleTag[@name=StartTag,closedBy=EndTag],
+  StartTextareaTag[@name=StartTag,closedBy=EndTag],
+  StartSelfClosingTag[@name=StartTag,closedBy=EndTag],
+  StartCloseTag[closedBy=EndTag],
+  NoMatchStartCloseTag[@name=StartCloseTag,closedBy=EndTag]
+  MismatchedStartCloseTag[@name=StartCloseTag,closedBy=EndTag],
+  missingCloseTag,
+  IncompleteCloseTag
+}
+
+@external tokens shortCommentContent from "./tokens.js" {
+  shortCommentContent
+}
+@external tokens longCommentContent from "./tokens.js" {
+  longCommentContent
+}
+@external tokens htmlCommentContent from "./tokens.js" {
+  htmlCommentContent
+}
+
+@external tokens expression from "./tokens.js" {
+  Expression
+}
+
+list<item> { item (item)* }
+kw<term> { @specialize[@name={term}]<identifier, term> }
+
+pfx<type> { @extend[@name=BlockPrefix]<BlockPrefix, type> }
+
+blk<type> { @specialize[@name=BlockType]<BlockType, type> }
+
+@tokens {
+  "\""[@name=DoubleQuote, openedBy="\"", closedBy="\""]
+  "\'"[@name=SingleQuote, openedBy="\'", closedBy="\'"]
+  
+  "{{"[closedBy="}}"]
+  "}}"[openedBy="{{"]
+  "("[closedBy="("]
+  ")"[openedBy=")"]
+  "["[closedBy="]"]
+  "]"[openedBy="["]
+  
+  "," "|" "..."
+  
+  space { (" " | "\t" | "\r" | "\n")+ }
+  
+  identifierChar { @asciiLetter | $[_$\u{a1}-\u{10ffff}] }
+  word { identifierChar (identifierChar | @digit)* }
+  identifier { word }
+  
+  Variable { identifierChar (identifierChar | @digit | ".")* }
+
+  BlockPrefix { "#" | "@" | "/" | ":" }
+  BlockType { identifier }
+
+  UnknownBlockContent { ![}]+ }
+
+  @precedence { UnknownBlockContent space }
+
+  htmlCommentStart { "<!--" }
+  htmlCommentEnd { "-->" }
+
+  shortCommentStart { "{{!" }
+  shortCommentEnd { "}}" }
+
+  longCommentStart { "{{!--" }
+  longCommentEnd { "--}}" }
+
+  @precedence { htmlCommentStart, longCommentStart, shortCommentStart, "{{" }
+
+
+  EndTag[openedBy="StartTag StartCloseTag"] { "/"? ">" }
+  SelfClosingEndTag[openedBy=StartTag] { "/>" }
+  @precedence { SelfClosingEndTag, EndTag }
+
+  tagNameStart {
+    "_" |
+    @asciiLowercase |
+    $[\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D] |
+    $[\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u{10000}-\u{EFFFF}]
+  }
+
+  componentNameStart {
+    @asciiUppercase
+  }
+
+  nameChar {
+    "_" |
+    "-" |
+    "." |
+    @asciiLetter |
+    @digit |
+    $[\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D] |
+    $[\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u{10000}-\u{EFFFF}] |
+    $[\u00B7\u0300-\u036F\u203F-\u2040]
+  }
+
+  TagName { tagNameStart nameChar* }
+
+  ComponentName { componentNameStart nameChar* }
+
+  attributeChar { ![\u0000-\u0020\u007F-\u009F"'>/=|:{\uFDD0-\uFDEF\uFFFE\uFFFF] }
+
+  AttributeName { attributeChar+ }
+  StyleAttributeName { "--" attributeChar+ }
+
+  @precedence { StyleAttributeName AttributeName }
+
+  UnquotedAttributeValue { ![ \t\n\r\u000C=<>"'`{] ![ \t\n\r\u000C=<>"'`]* }
+
+  attributeValueContentCharDouble { !["&{] }
+
+  attributeValueContentCharSingle { !['&{] }
+
+  Is { "=" }
+
+  EntityReference { "&" ![#; ]+ ";" }
+
+  CharacterReference { "&#" ![; ]+ ";" }
+
+  InvalidEntity { "&" }
+
+  @precedence { CharacterReference, EntityReference, InvalidEntity }
+
+  Text[group=TextContent] { ![<&{]+ }
+
+  ProcessingInst { "<?" piContent }
+
+  piContent { ![?] piContent | "?" piQuestion }
+  piQuestion { ![>] piContent | ">" }
+
+  DoctypeDecl { "<!" ("doctype" | "DOCTYPE") ![>]* ">" }
+
+  @precedence { htmlCommentStart, ProcessingInst, DoctypeDecl }
+
+}
+
+@external propSource svelteHighlighting from "./highlight"

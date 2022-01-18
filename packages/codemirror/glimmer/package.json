@@ -1,0 +1,59 @@
+{
+  "name": "lezer-glimmer",
+  "version": "0.0.0-alpha.0",
+  "author": "NullVoxPopuli",
+  "license": "MIT",
+  "main": "dist/index.cjs",
+  "type": "module",
+  "exports": {
+    "import": "./dist/index.es.js",
+    "require": "./dist/index.cjs"
+  },
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nullvoxpopuli/glimdown.git",
+    "path": "packages/lezer/glimmer"
+  },
+  "devDependencies": {
+    "@codemirror/buildhelper": "^0.1.16",
+    "@codemirror/language": "^6.6.0",
+    "@codemirror/state": "^6.2.0",
+    "@codemirror/theme-one-dark": "^6.1.2",
+    "@codemirror/view": "^6.9.5",
+    "@glimdown/lezer-infra": "*",
+    "@lezer/common": "^1.0.2",
+    "@lezer/generator": "^1.2.2",
+    "@nullvoxpopuli/eslint-configs": "^3.1.3",
+    "@types/mocha": "^10.0.1",
+    "codemirror": "^6.0.1",
+    "concurrently": "^7.2.2",
+    "eslint": "^8.38.0",
+    "mocha": "^9.2.2",
+    "prettier": "^2.8.7",
+    "rollup": "^3.20.6",
+    "typescript": "5.0.4",
+    "vite": "^4.2.2"
+  },
+  "dependencies": {
+    "@codemirror/lang-css": "^6.1.1",
+    "@codemirror/lang-html": "^6.4.3",
+    "@codemirror/lang-javascript": "^6.1.7",
+    "@lezer/highlight": "^1.1.4",
+    "@lezer/javascript": "^1.4.2",
+    "@lezer/lr": "^1.3.3"
+  },
+  "scripts": {
+    "dev": "concurrently 'npm:dev:*' -restart-tries -1",
+    "dev:vite": "vite ./dev/",
+    "dev:cm": "node ./dev/watch.cjs src/index.ts",
+    "lint:prettier:fix": "prettier -w .",
+    "lint:prettier": "prettier -c .",
+    "lint:fix": "concurrently 'npm:lint:*:fix' --names 'fix:'",
+    "lint:js": "eslint . --cache",
+    "lint:js:fix": "eslint . --fix",
+    "build": "cm-buildhelper src/index.ts",
+    "test": "mocha ../-infra/test.js"
+  }
+}

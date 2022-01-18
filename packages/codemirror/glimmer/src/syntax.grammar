@@ -1,0 +1,273 @@
+/*************************************
+*
+* This grammar intends to highlight the following:
+*  - Anything in {{ }}
+*  - non-HTML elements 
+*    - <PascalCase /> 
+*    - <this.expression />
+*    - <@fromArgs />
+*    - <:namedblock /> (casing doesn't matter here, only the leading :)
+*  - @args in normal elements (fits under components above)
+*  - ...attributes (which can be applied to any element or component)
+*
+*
+**************************************
+* Entrypoint 
+*************************************/
+@top Template { entity* }
+
+@skip { whitespace }
+
+entity {
+  moustache
+  // TODO: Args
+  // TODO: Components
+  // TODO: Named blocks
+  // TODO: ...attributes
+}
+
+moustache {
+  Expression
+  | Comment
+  // | BlockExpression
+}
+
+/*************************************
+* Comments 
+*************************************/
+Comment { shortComment | longComment | htmlComment }
+shortComment { "{{!" shortCommentContent* "}}" } 
+longComment { "{{!--" longCommentContent* "--}}" }
+htmlComment { "<!--" htmlCommentContent* "-->" }
+
+/*************************************
+* Blocks (hopefully with autocomplete) 
+*************************************/
+BlockExpression {
+  IfBlock 
+  // | UnlessBlock 
+  // | EachBlock | EachInBlock 
+  //| LetBlock | UnknownBlock
+}
+
+IfBlock[group=Block] {
+  IfBlockOpen (AmbiguousElseBlock | ElseBlock | entity) IfBlockClose
+}
+
+UnlessBlock[group=Block] {
+  UnlessBlockOpen (AmbiguousElseBlock | ElseBlock | entity) UnlessBlockClose
+}
+
+LetBlock[group=Block] {
+  LetBlockOpen SExpression LetBlockClose
+}
+
+EachBlock[group=Block] {
+  EachBlockOpen (ElseBlock | SExpression) EachBlockClose
+}
+
+EachInBlock[group=Block] {
+  EachInBlockOpen (ElseBlock | SExpression) EachInBlockClose
+}
+
+@precedence { 
+  BlockType @left, BlockPrefix @left, identifier @left 
+  //IfBlock @left, Expression @right, 
+}
+
+
+/***********************
+*
+* The bulk of the grammar is here 
+
+* Key:
+*  Expression: SExpression surrounded by {{ }} 
+*  SExpression: List of values, sub-expressions, including key-value pairs
+*
+************************/
+
+Positional { value+ }
+Named { NamedArg+ }
+
+CallExpression { "(" identifier Positional? Named? ")" }
+
+SExpression {
+  value
+}
+
+@skip {} {
+  NamedArg { identifier "=" value }
+
+  Expression { "{{" SExpression "}}" }
+
+  // Includes just a single property... which is wrong
+  MemberExpression { identifier ("\." identifier)* }
+  ThisExpression { kw<"this"> ("\." MemberExpression)? }
+
+  value {
+    ThisExpression 
+    | MemberExpression 
+    // | CallExpression
+    //| identifier 
+    //| String 
+  }
+
+  /*************************************
+  * Blocks (hopefully with autocomplete) 
+  *************************************/
+
+  UnlessBlockOpen[group=BlockOpen,closedBy=UnlessBlockClose] {
+    "{{" pfx<"#"> blk<"unless"> SExpression* "}}"
+  }
+
+  UnlessBlockClose[group=BlockClose,openedBy=UnlessBlockOpen] {
+    "{{" pfx<"/"> blk<"unless"> "}}"
+  }
+
+  IfBlockOpen[group=BlockOpen,closedBy=IfBlockClose] {
+    "{{" pfx<"#"> blk<"if"> SExpression "}}"
+  }
+
+
+  IfBlockClose[group=BlockClose,openedBy=IfBlockOpen] {
+    "{{" pfx<"/"> blk<"if"> "}}"
+  }
+
+  ElseBlock[group=BlockInline] {
+    "{{" pfx<":"> blk<"else"> (kw<"if"> SExpression*)? "}}"
+  }
+
+  AmbiguousElseBlock[group=BlockInline] {
+    "{{" blk<"else"> (kw<"if"> SExpression*)? "}}"
+  }
+
+  EachBlockOpen[group=BlockOpen,closedBy=EachBlockClose] {
+    "{{" pfx<"#"> blk<"each">
+    SExpression
+    kw<"as">
+    "|" Variable "|"
+    "}}"
+  }
+
+  EachBlockClose[group=BlockClose,openedBy=EachBlockOpen] {
+    "{{" pfx<"/"> blk<"each"> "}}"
+  }
+
+  EachInBlockOpen[group=BlockOpen,closedBy=EachInBlockClose] {
+    "{{" pfx<"#"> blk<"each-in">
+    SExpression
+    kw<"as">
+    "|" Variable+ "|"
+    "}}"
+  }
+
+  EachInBlockClose[group=BlockClose,openedBy=EachInBlockOpen] {
+    "{{" pfx<"/"> blk<"each-in"> "}}"
+  }
+
+  LetBlockOpen[group=BlockOpen,closedBy=LetBlockClose] {
+    "{{" pfx<"#"> blk<"let">
+    SExpression
+    kw<"as">
+    "|" Variable+ "|"
+    "}}"
+  }
+
+  LetBlockClose[group=BlockClose,openedBy=LetBlockOpen] {
+    "{{" pfx<"/"> blk<"let"> "}}"
+  }
+
+  UnknownBlock[group=BlockInline] {
+    "{{" BlockPrefix BlockType UnknownBlockContent? "}}"
+  }
+}
+
+
+list<item> { item (item)* }
+kw<term> { @specialize[@name={term}]<identifier, term> }
+pfx<type> { @extend[@name=BlockPrefix]<BlockPrefix, type> }
+blk<type> { @specialize[@name=BlockType]<BlockType, type> }
+
+Builtin {
+  kw<"on"> |
+  kw<"let"> |
+  kw<"debugger"> |
+  kw<"log"> |
+  kw<"each"> |
+  kw<"if"> |
+  kw<"unless"> |
+  kw<"fn"> |
+  kw<"modifier"> |
+  kw<"helper"> |
+  kw<"component"> |
+  kw<"yield"> |
+  kw<"outlet">
+}
+
+String {
+  "\"" attributeValueContentDouble? "\"" |
+  "\'" attributeValueContentSingle? "\'"
+}
+
+attributeValueContentDouble[@name=AttributeValueContent] {
+  (attributeValueContentCharDouble | attributeValueContentEntity)+
+}
+
+attributeValueContentSingle[@name=AttributeValueContent] {
+  (attributeValueContentCharSingle | attributeValueContentEntity)+
+}
+
+attributeValueContentEntity {
+  Expression
+}
+
+@external tokens shortCommentContent from "./tokens.js" { shortCommentContent }
+@external tokens longCommentContent from "./tokens.js" { longCommentContent }
+@external tokens htmlCommentContent from "./tokens.js" { htmlCommentContent }
+
+@tokens {
+  Text { ![{] Text? | "{" (@eof | ![%{] Text?) }
+  space { @whitespace+ }
+  whitespace { (std.whitespace | ",")+ }
+
+  "\""[@name=DoubleQuote, openedBy="\"", closedBy="\""]
+  "\'"[@name=SingleQuote, openedBy="\'", closedBy="\'"]
+  
+  "{{"[closedBy="}}"]
+  "}}"[openedBy="{{"]
+  "("[closedBy="("]
+  ")"[openedBy=")"]
+  "["[closedBy="]"]
+  "]"[openedBy="["]
+
+  attributeValueContentCharDouble { !["&{] }
+  attributeValueContentCharSingle { !['&{] }
+  
+  identifierChar { @asciiLetter | $[_$\u{a1}-\u{10ffff}] }
+  word { identifierChar (identifierChar | @digit)* }
+  identifier { word }
+  
+  Variable { identifierChar (identifierChar | @digit | ".")* }
+
+  BlockPrefix { "#" | "@" | "/" | ":" }
+  BlockType { identifier }
+  UnknownBlockContent { ![}]+ }
+
+  @precedence { UnknownBlockContent space }
+
+  htmlCommentStart { "<!--" }
+  htmlCommentEnd { "-->" }
+
+  shortCommentStart { "{{!" }
+  shortCommentEnd { "}}" }
+
+  longCommentStart { "{{!--" }
+  longCommentEnd { "--}}" }
+
+  @precedence { htmlCommentStart, longCommentStart, shortCommentStart, "{{" }
+
+  Is { "=" }
+}
+
+
+@external propSource svelteHighlighting from "./highlight"

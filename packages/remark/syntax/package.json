@@ -1,0 +1,75 @@
+{
+  "name": "@glimdown/remark",
+  "version": "0.0.0-alpha.0",
+  "description": "Glimdown for remark",
+  "author": "NullVoxPopuli",
+  "repository": {
+    "url": "https://github.com/NullVoxPopuli/glimdown"
+  },
+  "type": "module",
+  "license": "MIT",
+  "private": false,
+  "files": [
+    "src/**/*",
+    "README.md"
+  ],
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "scripts": {
+    "build:types": "tsc --build",
+    "lint": "yarn lint:js",
+    "lint:js": "eslint .",
+    "lint:fix": "yarn lint:js --fix",
+    "test": "vitest --coverage --no-watch",
+    "test:watch": "vitest --watch"
+  },
+  "devDependencies": {
+    "@nullvoxpopuli/eslint-configs": "^2.1.18",
+    "@semantic-release/changelog": "^6.0.0",
+    "@semantic-release/git": "^10.0.0",
+    "babel-eslint": "^10.1.0",
+    "c8": "^7.11.0",
+    "common-tags": "^1.8.2",
+    "eslint": "^7.0.0",
+    "eslint-plugin-decorator-position": "^4.0.1",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "mdast": "^3.0.0",
+    "mdast-util-from-markdown": "^1.2.0",
+    "micromark": "^3.0.10",
+    "prettier": "^2.5.1",
+    "semantic-release": "^18.0.0",
+    "semantic-release-monorepo": "^7.0.0",
+    "typescript": "4.4.4",
+    "unified": "^10.1.1",
+    "vitest": "^0.1.19"
+  },
+  "release": {
+    "extends": "semantic-release-monorepo",
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/github",
+      "@semantic-release/git"
+    ]
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "volta": {
+    "node": "16.13.2",
+    "yarn": "1.22.17"
+  },
+  "dependencies": {
+    "acorn": "^8.7.0",
+    "micromark-util-combine-extensions": "^1.0.0"
+  }
+}

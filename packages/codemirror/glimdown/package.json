@@ -1,0 +1,28 @@
+{
+  "name": "@glimdown/lezer",
+  "version": "0.0.0-alpha.0",
+  "author": "NullVoxPopuli",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nullvoxpopuli/glimdown.git",
+    "path": "packages/lezer/glimdown"
+  },
+  "devDependencies": {
+    "@glimdown/lezer-infra": "*",
+    "@lezer/generator": "^1.0.0",
+    "mocha": "^9.0.1",
+    "rollup": "^2.52.2",
+    "@rollup/plugin-node-resolve": "^9.0.0"
+  },
+  "dependencies": {
+    "@lezer/lr": "^1.0.0",
+    "@lezer/highlight": "^1.0.0"
+  },
+  "scripts": {
+    "build": "lezer-generator src/glimdown.grammar -o src/parser && rollup -c",
+    "build-debug": "lezer-generator src/glimdown.grammar --names -o src/parser && rollup -c",
+    "test": "mocha ../-infra/test.js"
+  }
+}
