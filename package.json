@@ -2,9 +2,43 @@
   "name": "glimdown",
   "version": "0.0.0",
   "description": "A plugin for the Unified ecosystem for using glimmer/ember with markdown",
-  "main": "index.js",
   "repository": "git@github.com:NullVoxPopuli/glimdown.git",
   "author": "NullVoxPopuli",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "turbo run test",
+    "lint:fix": "turbo run lint:fix",
+    "lint": "turbo run lint"
+  },
+  "devDependencies": {
+    "turbo": "1.0.28"
+  },
+  "turbo": {
+    "baseBranch": "origin/main",
+    "pipeline": {
+      "start": {
+        "dependsOn": [
+          "^build"
+        ],
+        "cache": false
+      },
+      "build": {
+        "dependsOn": [
+          "^build"
+        ]
+      },
+      "lint": {},
+      "lint:fix": {},
+      "test": {}
+    }
+  },
+  "volta": {
+    "node": "16.13.2",
+    "yarn": "1.22.17",
+    "npm": "8.3.1"
+  }
 }
