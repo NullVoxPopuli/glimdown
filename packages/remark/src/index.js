@@ -1,10 +1,13 @@
 // @ts-check
 /**
  * @typedef {import('mdast').Root} Root
+ * @typedef {{}} Options
+ * @typedef {import('unified').Plugin<[Options?]|void[], Root, string>} Plugin
  *
  * References:
  *  - https://github.com/mdx-js/mdx/blob/main/packages/remark-mdx/index.js
  */
+import { fromMarkdown } from 'mdast-util-from-markdown';
 
 /**
  * Unified plugin for parsing glimdown for use in
@@ -42,13 +45,18 @@
  *  console.log(html);
  * ~~~
  *
+ * @type {Plugin}
  */
 export function glimdown(options = {}) {
   const data = this.data();
 
-  add('micromarkExtensions', mdxjs(options));
-  add('fromMarkdownExtensions', mdxFromMarkdown);
+  // add('micromarkExtensions', mdxjs(options));
+  // add('fromMarkdownExtensions', mdxFromMarkdown);
   // add('toMarkdownExtensions', mdxToMarkdown);
+  const tree = fromMarkdown(doc, {
+    extensions: [],
+    mdastExtensions: [],
+  });
 
   /**
    * @param {string} field
