@@ -2,6 +2,7 @@
   "name": "@glimdown/lezer-infra",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "rollup": "^2.52.2",
     "@rollup/plugin-node-resolve": "^9.0.0"

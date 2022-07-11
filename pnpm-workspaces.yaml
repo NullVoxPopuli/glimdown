@@ -1,5 +1,0 @@
-packages:
-  - 'packages/*'
-  - 'packages/remark/*'
-  - 'packages/lezer/*'
-  - 'packages/codemirror/*'
