@@ -1,3 +1,0 @@
-[35m@glimdown/remark:lint:fix: [0mcache hit, replaying output [2mb6f6699da560f06d[0m
-[35m@glimdown/remark:lint:fix: [0m$ yarn lint:js --fix
-[35m@glimdown/remark:lint:fix: [0m$ eslint . --fix
