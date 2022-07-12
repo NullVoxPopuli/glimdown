@@ -1,29 +1,27 @@
-@top Glimmer {
-  list<
-    Expression
-    | Block
-    | BlockComment
-  >
-}
+@top Glimmer { Expression* }
 
-Expression { moustache<SubExpression> }
-Block { StartBlock any* EndBlock }
-StartBlock { moustache<"#" name SubExpression? As?>  }
+Expression { moustache<SubExpression> | Block | BlockComment }
+Block { StartBlock EndBlock }
+StartBlock[closedBy="EndBlock"] { moustache<"#" Function SubExpression? As?>  }
 As { kw<"as"> "|" list<name> "|" }
-EndBlock { moustache<"/" name> }
+EndBlock[openedBy="StartBlock"] { moustache<"/" name> }
+
+Function { if | let | each | name }
 
 SubExpression { list<Value> NamedArgs? }
 Value {
   boolean
   | null
   | undefined
-  | string
+  | String
   | number
   | Invocation
   | Argument
   | ThisExpression
   | PropertyPath
 }
+
+String { string }
 Invocation { "(" SubExpression ")" }
 NamedArgs { list<Pair> }
 Pair { string "=" Value }
@@ -36,15 +34,23 @@ boolean {
   @specialize[@name=BooleanLiteral]<identifier, "true" | "false">
 }
 
+if { kw<"if"> }
+let { kw<"let"> }
+each { kw<"each"> }
+
 this { kw<"this"> }
 null { kw<"null"> }
 undefined { kw<"undefined"> }
 
-LongComment { "!--" any* "--" }
-ShortComment { "!" any* }
+LongComment { "!--" "--" }
+ShortComment { "!" }
 BlockComment { moustache<(LongComment | ShortComment)> }
 
 @tokens {
+  // "{{"
+  // "}}"
+  // "{{#"
+  // "{{/"
 
   number { int frac? }
   int { '0' | $[1-9] @digit* }
@@ -57,20 +63,15 @@ BlockComment { moustache<(LongComment | ShortComment)> }
   @precedence { name, identifier }
 
   name { word }
-  any { $[.] }
 
   string {
    "\"" !["]* "\"" |
     "\'" ![']* "\'"
   }
 
-  space { (" " | "\t" | "\r" | "\n")+ }
 
-
-  @precedence { " ", space }
+  @precedence { identifier, "{{" }
 }
-
-@skip { space }
 
 
 // Helper And Special Things
