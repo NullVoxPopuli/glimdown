@@ -14,10 +14,8 @@ Value {
   | null
   | undefined
   | String
-  | number
+  | Number
   | Invocation
-  | Argument
-  | ThisExpression
   | PropertyPath
 }
 
@@ -27,8 +25,8 @@ NamedArgs { list<Pair> }
 Pair { string "=" Value }
 
 Argument { "@" name }
-ThisExpression { this "." PropertyPath }
-PropertyPath { name ("." name) }
+Property { this | Argument | name }
+PropertyPath { Property ("." name)}
 
 boolean {
   @specialize[@name=BooleanLiteral]<identifier, "true" | "false">
@@ -45,6 +43,8 @@ undefined { kw<"undefined"> }
 LongComment { "!--" "--" }
 ShortComment { "!" }
 BlockComment { moustache<(LongComment | ShortComment)> }
+
+Number { number }
 
 @tokens {
   // "{{"

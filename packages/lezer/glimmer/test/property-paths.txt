@@ -7,7 +7,11 @@
 Glimmer(
   Expression(
     SubExpression(
-      Value(String)
+      Value(
+        PropertyPath(
+          Property
+        )
+      )
     )
   )
 )
@@ -21,7 +25,11 @@ Glimmer(
 Glimmer(
   Expression(
     SubExpression(
-      Value(String)
+      Value(
+        PropertyPath(
+          Property
+        )
+      )
     )
   )
 )
@@ -35,7 +43,11 @@ Glimmer(
 Glimmer(
   Expression(
     SubExpression(
-      Value(String)
+      Value(
+        PropertyPath(
+          Property(Argument)
+        )
+      )
     )
   )
 )

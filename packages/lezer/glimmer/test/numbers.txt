@@ -7,7 +7,7 @@
 Glimmer(
   Expression(
     SubExpression(
-      Value(number)
+      Value(Number)
     )
   )
 )
