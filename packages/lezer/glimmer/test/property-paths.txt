@@ -1,0 +1,41 @@
+# foo.bar
+
+{{foo.bar}}
+
+==>
+
+Glimmer(
+  Expression(
+    SubExpression(
+      Value(String)
+    )
+  )
+)
+
+# this.bar
+
+{{this.bar}}
+
+==>
+
+Glimmer(
+  Expression(
+    SubExpression(
+      Value(String)
+    )
+  )
+)
+
+# @arg.bar
+
+{{@arg.bar}}
+
+==>
+
+Glimmer(
+  Expression(
+    SubExpression(
+      Value(String)
+    )
+  )
+)

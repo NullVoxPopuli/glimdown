@@ -18,7 +18,7 @@ Value {
   | null
   | undefined
   | string
-  | Number
+  | number
   | Invocation
   | Argument
   | ThisExpression
@@ -36,14 +36,9 @@ boolean {
   @specialize[@name=BooleanLiteral]<identifier, "true" | "false">
 }
 
-null {
-  @specialize[@name=Literal]<identifier, "null">
-}
-
-undefined {
-  @specialize[@name=Literal]<identifier, "undefined">
-}
-
+this { kw<"this"> }
+null { kw<"null"> }
+undefined { kw<"undefined"> }
 
 LongComment { "!--" any* "--" }
 ShortComment { "!" any* }
@@ -51,27 +46,22 @@ BlockComment { moustache<(LongComment | ShortComment)> }
 
 @tokens {
 
-  Number { int frac? }
+  number { int frac? }
   int { '0' | $[1-9] @digit* }
   frac { '.' @digit+ }
-  this { "this" }
 
   identifierChar { @asciiLetter | $[_$\u{a1}-\u{10ffff}] }
   word { identifierChar (identifierChar | @digit)* }
   identifier { word }
 
-  @precedence { identifier, this }
-  @precedence { name, identifier, this }
+  @precedence { name, identifier }
 
   name { word }
   any { $[.] }
 
-  attributeContentDouble { !["]+ }
-  attributeContentSingle { ![']+ }
-
   string {
-   "\"" attributeContentDouble* "\"" |
-    "\'" attributeContentSingle* "\'"
+   "\"" !["]* "\"" |
+    "\'" ![']* "\'"
   }
 
   space { (" " | "\t" | "\r" | "\n")+ }
