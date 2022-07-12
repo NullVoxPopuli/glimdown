@@ -4,6 +4,36 @@
 
 ==>
 
-Script(
+Glimmer(
+  Expression(
+    SubExpression(
+      Value(Argument)
+    )
+  )
+)
+
+
+# Function invocation
+
+{{ (myFunction @foo) }}
+
+==>
+
+Glimmer(
   Expression(ArgumentReference)
 )
+
+
+# Iteration
+
+{{#each this.foo as |item|}}
+  {{item}}
+{{/each}}
+
+==>
+
+Glimmer(
+  Expression(ArgumentReference)
+)
+
+

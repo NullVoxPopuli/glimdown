@@ -1,0 +1,53 @@
+# Simple Integer
+
+{{42}}
+
+==>
+
+Glimmer(
+  Expression(
+    SubExpression(
+      Value(Number)
+    )
+  )
+)
+
+
+
+# Decimal
+
+{{42.42}}
+
+==>
+
+Glimmer(
+  Expression(
+    SubExpression(
+      Value(Number)
+    )
+  )
+)
+
+
+# Multiple Integer
+
+{{42}} and {{24}}
+
+==>
+
+Glimmer(
+  Expression(
+    SubExpression(
+      Value(Number)
+    )
+  )
+
+  Expression(
+    SubExpression(
+      Value(Number)
+    )
+  )
+)
+
+
+

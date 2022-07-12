@@ -1,0 +1,56 @@
+# Basic - Double
+
+{{"Some String"}}
+
+==>
+
+Glimmer(
+  Expression(
+    SubExpression(
+      Value(String)
+    )
+  )
+)
+
+# Basic - Single
+
+{{'Some String'}}
+
+==>
+
+Glimmer(
+  Expression(
+    SubExpression(
+      Value(String)
+    )
+  )
+)
+
+# Nested - Double
+
+{{"Some 'inner' String"}}
+
+==>
+
+Glimmer(
+  Expression(
+    SubExpression(
+      Value(String)
+    )
+  )
+)
+
+# Nested - Single
+
+{{'Some "inner" String'}}
+
+==>
+
+Glimmer(
+  Expression(
+    SubExpression(
+      Value(String)
+    )
+  )
+)
+

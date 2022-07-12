@@ -1,0 +1,68 @@
+# True
+
+{{true}}
+
+==>
+
+Glimmer(
+  Expression(
+    SubExpression(
+      Value
+    )
+  )
+)
+
+
+
+# False
+
+{{false}}
+
+==>
+
+Glimmer(
+  Expression(
+    SubExpression(
+      Value(
+        False
+      )
+    )
+  )
+)
+
+
+
+# Null
+
+{{null}}
+
+==>
+
+Glimmer(
+  Expression(
+    SubExpression(
+      Value(
+        Null
+      )
+    )
+  )
+)
+
+
+# Undefined
+
+{{undefined}}
+
+==>
+
+Glimmer(
+  Expression(
+    SubExpression(
+      Value(
+        Undefined
+      )
+    )
+  )
+)
+
+

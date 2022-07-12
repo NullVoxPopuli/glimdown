@@ -1,0 +1,93 @@
+@top Glimmer {
+  list<
+    Expression
+    | Block
+    | BlockComment
+  >
+}
+
+Expression { moustache<SubExpression> }
+Block { StartBlock any* EndBlock }
+StartBlock { moustache<"#" name SubExpression? As?>  }
+As { kw<"as"> "|" list<name> "|" }
+EndBlock { moustache<"/" name> }
+
+SubExpression { list<Value> NamedArgs? }
+Value {
+  boolean
+  | null
+  | undefined
+  | string
+  | Number
+  | Invocation
+  | Argument
+  | ThisExpression
+  | PropertyPath
+}
+Invocation { "(" SubExpression ")" }
+NamedArgs { list<Pair> }
+Pair { string "=" Value }
+
+Argument { "@" name }
+ThisExpression { this "." PropertyPath }
+PropertyPath { name ("." name) }
+
+boolean {
+  @specialize[@name=BooleanLiteral]<identifier, "true" | "false">
+}
+
+null {
+  @specialize[@name=Literal]<identifier, "null">
+}
+
+undefined {
+  @specialize[@name=Literal]<identifier, "undefined">
+}
+
+
+LongComment { "!--" any* "--" }
+ShortComment { "!" any* }
+BlockComment { moustache<(LongComment | ShortComment)> }
+
+@tokens {
+
+  Number { int frac? }
+  int { '0' | $[1-9] @digit* }
+  frac { '.' @digit+ }
+  this { "this" }
+
+  identifierChar { @asciiLetter | $[_$\u{a1}-\u{10ffff}] }
+  word { identifierChar (identifierChar | @digit)* }
+  identifier { word }
+
+  @precedence { identifier, this }
+  @precedence { name, identifier, this }
+
+  name { word }
+  any { $[.] }
+
+  attributeContentDouble { !["]+ }
+  attributeContentSingle { ![']+ }
+
+  string {
+   "\"" attributeContentDouble* "\"" |
+    "\'" attributeContentSingle* "\'"
+  }
+
+  space { (" " | "\t" | "\r" | "\n")+ }
+
+
+  @precedence { " ", space }
+}
+
+@skip { space }
+
+
+// Helper And Special Things
+list<item> { item (" " item)* }
+kw<term> { @specialize[@name={term}]<identifier, term> }
+moustache<content> { "{{" content "}}" }
+
+
+@external propSource glimmerHighlighting from './highlight'
+

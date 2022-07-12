@@ -1,7 +1,7 @@
 import {styleTags, tags as t} from "@lezer/highlight"
 
 // See: https://github.com/lezer-parser/javascript/blob/main/src/highlight.js
-export const jsHighlight = styleTags({
+export const glimmerHighlighting = styleTags({
   "each if unless else": t.controlKeyword,
   "yield outlet": t.operatorKeyword,
   "let": t.definitionKeyword,

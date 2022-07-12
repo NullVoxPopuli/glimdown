@@ -1,0 +1,22 @@
+# Long
+
+{{!-- text here --}}
+
+==>
+
+Glimmer(
+  BlockComment
+)
+
+
+# Short
+
+{{! text here }}
+
+==>
+
+Glimmer(
+  BlockComment
+)
+
+

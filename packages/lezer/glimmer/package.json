@@ -3,7 +3,14 @@
   "version": "0.0.0-alpha.0",
   "author": "NullVoxPopuli",
   "license": "MIT",
+  "main": "dist/index.cjs",
   "type": "module",
+  "exports": {
+    "import": "./dist/index.es.js",
+    "require": "./dist/index.cjs"
+  },
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/nullvoxpopuli/glimdown.git",

@@ -12,9 +12,11 @@ importers:
 
   packages/lezer/-infra:
     specifiers:
+      '@lezer/generator': ^1.0.0
       '@rollup/plugin-node-resolve': ^9.0.0
       rollup: ^2.52.2
     dependencies:
+      '@lezer/generator': 1.1.0
       '@rollup/plugin-node-resolve': 9.0.0_rollup@2.76.0
       rollup: 2.76.0
 
@@ -305,7 +307,6 @@ packages:
     dependencies:
       '@lezer/common': 1.0.0
       '@lezer/lr': 1.2.0
-    dev: true
 
   /@lezer/highlight/1.0.0:
     resolution: {integrity: sha512-nsCnNtim90UKsB5YxoX65v3GEIw3iCHw9RM2DtdgkiqAbKh9pCdvi8AWNwkYf10Lu6fxNhXPpkpHbW6mihhvJA==}

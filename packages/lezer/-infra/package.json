@@ -5,6 +5,7 @@
   "type": "module",
   "dependencies": {
     "rollup": "^2.52.2",
+    "@lezer/generator": "^1.0.0",
     "@rollup/plugin-node-resolve": "^9.0.0"
   }
 }
