@@ -1,8 +1,8 @@
-@top Glimmer { Expression* }
+@top Glimmer { ( Expression | Text )* }
 
 Expression { moustache<SubExpression> | Block | BlockComment }
 Block { StartBlock EndBlock }
-StartBlock[closedBy="EndBlock"] { moustache<"#" Function SubExpression? As?>  }
+StartBlock[closedBy="EndBlock"] { moustache<"#" Function SubExpression? As?> }
 As { kw<"as"> "|" list<name> "|" }
 EndBlock[openedBy="StartBlock"] { moustache<"/" name> }
 
@@ -52,9 +52,7 @@ Number { number }
   // "{{#"
   // "{{/"
 
-  number { int frac? }
-  int { '0' | $[1-9] @digit* }
-  frac { '.' @digit+ }
+  number { @digit+ | (@digit+ ("." @digit*))}
 
   identifierChar { @asciiLetter | $[_$\u{a1}-\u{10ffff}] }
   word { identifierChar (identifierChar | @digit)* }
@@ -69,6 +67,7 @@ Number { number }
     "\'" ![']* "\'"
   }
 
+  Text { ![<{]+ }
 
   @precedence { identifier, "{{" }
 }

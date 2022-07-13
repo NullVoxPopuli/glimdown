@@ -40,7 +40,9 @@ Glimmer(
     SubExpression(
       Value(Number)
     )
-  )
+  ),
+
+  Text,
 
   Expression(
     SubExpression(
