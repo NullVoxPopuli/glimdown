@@ -1,28 +1,39 @@
-@top Glimmer { ( Expression | Text )* }
+@top Glimmer { (Expression |  Text)+ }
 
 Expression { moustache<SubExpression> | Block | BlockComment }
-Block { StartBlock EndBlock }
-StartBlock[closedBy="EndBlock"] { moustache<"#" Function SubExpression? As?> }
-As { kw<"as"> "|" list<name> "|" }
-EndBlock[openedBy="StartBlock"] { moustache<"/" name> }
 
-Function { if | let | each | name }
+Block {
+  StartBlock
+  (Expression | Text)*
+  EndBlock
+}
+As { kw<"as"> "|" list<name> "|" }
+
+StartBlock[closedBy="EndBlock"] {
+  "{{#" Function SubExpression? As? "}}"
+}
+EndBlock[openedBy="StartBlock"] {
+  "{{/" Function "}}"
+}
+
+Function { if | let | each | else | name }
 
 SubExpression { list<Value> NamedArgs? }
 Value {
   boolean
   | null
   | undefined
+  | Function
   | String
   | Number
   | Invocation
   | PropertyPath
 }
 
-String { string }
 Invocation { "(" SubExpression ")" }
-NamedArgs { list<Pair> }
+
 Pair { string "=" Value }
+NamedArgs { list<Pair> }
 
 Argument { "@" name }
 Property { this | Argument | name }
@@ -32,44 +43,48 @@ boolean {
   @specialize[@name=BooleanLiteral]<identifier, "true" | "false">
 }
 
-if { kw<"if"> }
 let { kw<"let"> }
 each { kw<"each"> }
+if { kw<"if"> }
+else { kw<"else"> }
 
 this { kw<"this"> }
 null { kw<"null"> }
 undefined { kw<"undefined"> }
 
-LongComment { "!--" "--" }
-ShortComment { "!" }
-BlockComment { moustache<(LongComment | ShortComment)> }
 
+ShortComment { "{{!" (Text*) "}}" }
+LongComment { "{{!--" (Text*) "--}}" }
+BlockComment { LongComment | ShortComment }
+
+String { string }
 Number { number }
 
-@tokens {
-  // "{{"
-  // "}}"
-  // "{{#"
-  // "{{/"
+@precedence { Text, Function, else, if, elseIf, Expression }
 
+@tokens {
   number { @digit+ | (@digit+ ("." @digit*))}
 
   identifierChar { @asciiLetter | $[_$\u{a1}-\u{10ffff}] }
   word { identifierChar (identifierChar | @digit)* }
-  identifier { word }
-
-  @precedence { name, identifier }
-
   name { word }
+  identifier { word }
 
   string {
    "\"" !["]* "\"" |
     "\'" ![']* "\'"
   }
 
-  Text { ![<{]+ }
+  Text { _+ }
 
-  @precedence { identifier, "{{" }
+  @precedence {
+    Text,
+    "{{#", "{{/", "|", " ",
+    "{{", "}}", "{{!",
+    "{{!--", "--}}",
+    identifier,
+    name
+  }
 }
 
 

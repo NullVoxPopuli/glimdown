@@ -20,3 +20,34 @@ Glimmer(
 )
 
 
+# Long multiline
+
+{{!--
+  line 1
+  line 2
+
+weird indent
+
+  line 4
+
+--}}
+
+==>
+
+Glimmer(BlockComment)
+
+# Short multiline
+
+{{!
+  line 1
+  line 2
+
+weird indent
+
+  line 4
+
+}}
+
+==>
+
+Glimmer(BlockComment)
