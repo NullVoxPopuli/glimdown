@@ -7,7 +7,9 @@
 Glimmer(
   Expression(
     SubExpression(
-      Value
+      Value(
+        BooleanLiteral
+      )
     )
   )
 )
@@ -24,7 +26,7 @@ Glimmer(
   Expression(
     SubExpression(
       Value(
-        False
+        BooleanLiteral
       )
     )
   )
@@ -42,7 +44,7 @@ Glimmer(
   Expression(
     SubExpression(
       Value(
-        Null
+        null
       )
     )
   )
@@ -59,7 +61,7 @@ Glimmer(
   Expression(
     SubExpression(
       Value(
-        Undefined
+        undefined
       )
     )
   )
