@@ -1,4 +1,4 @@
-@top Glimmer { (Expression |  Text)+ }
+@top Glimmer { (Expression)+ }
 
 Expression { moustache<SubExpression> | Block | BlockComment }
 
@@ -60,7 +60,7 @@ BlockComment { LongComment | ShortComment }
 String { string }
 Number { number }
 
-@precedence { Text, Function, else, if, elseIf, Expression }
+@precedence { Function, else, if, elseIf, Expression }
 
 @tokens {
   number { @digit+ | (@digit+ ("." @digit*))}
