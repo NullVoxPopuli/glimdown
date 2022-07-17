@@ -2,13 +2,13 @@
 @top Glimmer { ( Expression | BlockComment )* }
 
 @skip { invisibles | Text }
-/* @skip {} { */
+@skip {} {
   String { string }
 
-  ShortComment { StartShortComment EndStache }
-  LongComment { StartLongComment EndLongComment }
+  ShortComment { StartShortComment Text* EndStache }
+  LongComment { StartLongComment Text* EndLongComment }
   BlockComment { LongComment | ShortComment }
-/* } */
+}
 
 Expression { StartStache SubExpression EndStache | Block }
 
@@ -87,7 +87,7 @@ Number { number }
   SubExpEnd[openedBy="SubExpStart"] { ")" }
 
 
-  Text { (@asciiLetter)+ }
+  Text { (@asciiLetter | invisibles)+ }
 
   string {
    "\"" !["]* "\"" |

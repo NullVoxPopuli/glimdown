@@ -6,13 +6,15 @@
 
 Glimmer(
   Expression(
+    StartStache,
     SubExpression(
       Value(
         PropertyPath(
           Property
         )
       )
-    )
+    ),
+    EndStache
   )
 )
 
@@ -24,13 +26,15 @@ Glimmer(
 
 Glimmer(
   Expression(
+    StartStache,
     SubExpression(
       Value(
         PropertyPath(
-          Property
+          Property(this)
         )
       )
-    )
+    ),
+    EndStache
   )
 )
 
@@ -42,12 +46,14 @@ Glimmer(
 
 Glimmer(
   Expression(
+    StartStache,
     SubExpression(
       Value(
         PropertyPath(
           Property(Argument)
         )
       )
-    )
+    ),
+    EndStache
   )
 )

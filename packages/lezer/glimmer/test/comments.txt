@@ -5,7 +5,13 @@
 ==>
 
 Glimmer(
-  BlockComment
+  BlockComment(
+    LongComment(
+      StartLongComment,
+      Text,
+      EndLongComment
+    )
+  )
 )
 
 
@@ -16,8 +22,15 @@ Glimmer(
 ==>
 
 Glimmer(
-  BlockComment
+  BlockComment(
+    ShortComment(
+      StartShortComment,
+      Text,
+      EndStache
+    )
+  )
 )
+
 
 
 # Long multiline
@@ -34,7 +47,15 @@ weird indent
 
 ==>
 
-Glimmer(BlockComment)
+Glimmer(
+  BlockComment(
+    LongComment(
+      StartLongComment,
+      Text,
+      EndLongComment
+    )
+  )
+)
 
 # Short multiline
 
@@ -50,7 +71,15 @@ weird indent
 
 ==>
 
-Glimmer(BlockComment)
+Glimmer(
+  BlockComment(
+    ShortComment(
+      StartShortComment,
+      Text,
+      EndStache
+    )
+  )
+)
 
 
 # Long - empty
@@ -60,7 +89,13 @@ Glimmer(BlockComment)
 ==>
 
 Glimmer(
-  BlockComment
+  BlockComment(
+    LongComment(
+      StartLongComment,
+      Text,
+      EndLongComment
+    )
+  )
 )
 
 
@@ -71,5 +106,11 @@ Glimmer(
 ==>
 
 Glimmer(
-  BlockComment
+  BlockComment(
+    ShortComment(
+      StartShortComment,
+      Text,
+      EndStache
+    )
+  )
 )

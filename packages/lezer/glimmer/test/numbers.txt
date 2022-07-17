@@ -6,9 +6,11 @@
 
 Glimmer(
   Expression(
+    StartStache,
     SubExpression(
       Value(Number)
-    )
+    ),
+    EndStache
   )
 )
 
@@ -22,9 +24,11 @@ Glimmer(
 
 Glimmer(
   Expression(
+    StartStache,
     SubExpression(
       Value(Number)
-    )
+    ),
+    EndStache
   )
 )
 
@@ -37,15 +41,19 @@ Glimmer(
 
 Glimmer(
   Expression(
+    StartStache,
     SubExpression(
       Value(Number)
-    )
+    ),
+    EndStache
   ),
 
   Expression(
+    StartStache,
     SubExpression(
       Value(Number)
-    )
+    ),
+    EndStache
   )
 )
 
@@ -58,17 +66,21 @@ Glimmer(
 
 Glimmer(
   Expression(
+    StartStache,
     SubExpression(
       Value(Number)
-    )
+    ),
+    EndStache
   ),
 
   Text,
 
   Expression(
+    StartStache,
     SubExpression(
       Value(Number)
-    )
+    ),
+    EndStache
   )
 )
 

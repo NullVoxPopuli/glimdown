@@ -48,9 +48,23 @@ Glimmer(
 ==>
 
 Glimmer(
-  Expression(ArgumentReference)
+  Expression(
+    StartStache,
+    SubExpression(
+      Value(
+        Invocation(
+          SubExpStart,
+          SubExpression(
+            Value(PropertyPath(Property)),
+            Value(PropertyPath(Property(Argument)))
+          ),
+          SubExpEnd
+        )
+      )
+    ),
+    EndStache
+  )
 )
-
 
 # Iteration
 
