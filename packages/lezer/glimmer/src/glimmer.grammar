@@ -1,10 +1,17 @@
-@top Glimmer { (Expression)+ }
+@top Glimmer { Expression* }
+@skip { invisibles | Text }
+@skip {} {
+  String { string }
+  ShortComment { "{{!" "}}" }
+  LongComment { "{{!--" "--}}" }
+  BlockComment { LongComment | ShortComment }
+}
 
 Expression { moustache<SubExpression> | Block | BlockComment }
 
 Block {
   StartBlock
-  (Expression | Text)*
+  Expression*
   EndBlock
 }
 As { kw<"as"> "|" list<name> "|" }
@@ -53,16 +60,10 @@ null { kw<"null"> }
 undefined { kw<"undefined"> }
 
 
-ShortComment { "{{!" (Text*) "}}" }
-LongComment { "{{!--" (Text*) "--}}" }
-BlockComment { LongComment | ShortComment }
-
-String { string }
 Number { number }
 
-@precedence { Function, else, if, elseIf, Expression }
-
 @tokens {
+  invisibles { @whitespace+ }
   number { @digit+ | (@digit+ ("." @digit*))}
 
   identifierChar { @asciiLetter | $[_$\u{a1}-\u{10ffff}] }
@@ -70,20 +71,27 @@ Number { number }
   name { word }
   identifier { word }
 
+  Text { _+ }
+
+  @precedence { identifier, Text }
+  @precedence { name, Text }
+
   string {
    "\"" !["]* "\"" |
     "\'" ![']* "\'"
   }
 
-  Text { _+ }
-
   @precedence {
-    Text,
-    "{{#", "{{/", "|", " ",
-    "{{", "}}", "{{!",
-    "{{!--", "--}}",
     identifier,
-    name
+    name,
+    "(", ")", "|", ".", "@", "="
+    "{{#", "{{/", "|", " ",
+    "{{!--", "--}}",
+    "{{", "}}", "{{!",
+    invisibles,
+    string,
+    number,
+    Text
   }
 }
 

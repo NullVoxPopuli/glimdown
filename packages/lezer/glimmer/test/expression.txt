@@ -37,3 +37,16 @@ Glimmer(
 )
 
 
+# Multiple
+
+{{@foo}} {{@bar}}
+
+==>
+
+Glimmer(
+  Expression(
+    SubExpression(
+      Value(Argument)
+    )
+  )
+)

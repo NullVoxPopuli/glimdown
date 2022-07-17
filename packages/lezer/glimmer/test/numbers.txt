@@ -31,6 +31,27 @@ Glimmer(
 
 # Multiple Integer
 
+{{42}} {{24}}
+
+==>
+
+Glimmer(
+  Expression(
+    SubExpression(
+      Value(Number)
+    )
+  ),
+
+  Expression(
+    SubExpression(
+      Value(Number)
+    )
+  )
+)
+
+
+# Multiple with Text
+
 {{42}} and {{24}}
 
 ==>
