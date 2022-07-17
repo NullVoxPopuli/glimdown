@@ -8,7 +8,7 @@ Glimmer(
   Expression(
     StartStache,
     SubExpression(
-      Value(PropertyPath(Property(Argument)))
+      Value(Property(Argument))
     ),
     EndStache
   )
@@ -28,8 +28,9 @@ Glimmer(
         Invocation(
           SubExpStart,
           SubExpression(
-            Value(PropertyPath(Property)),
-            Value(PropertyPath(Property(Argument)))
+            Value(Property),
+            Text,
+            Value(Property(Argument))
           ),
           SubExpEnd
         )

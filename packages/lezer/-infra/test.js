@@ -22,7 +22,9 @@ async function runTests() {
         parser = module.parser;
       });
 
-      for (let {name, run} of fileTests(fs.readFileSync(path.join(caseDir, file), "utf8"), file))
+      let testFile = fs.readFileSync(path.join(caseDir, file), "utf8");
+
+      for (let {name, run} of fileTests(testFile, file))
         it(name, () => run(parser))
     })
   }

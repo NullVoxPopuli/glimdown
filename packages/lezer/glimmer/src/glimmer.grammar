@@ -1,16 +1,32 @@
 @detectDelim
 @top Glimmer { ( Expression | BlockComment )* }
 
-@skip { invisibles | Text }
-@skip {} {
+@skip { Text }
+@skip { } {
   String { string }
 
   ShortComment { StartShortComment Text* EndStache }
   LongComment { StartLongComment Text* EndLongComment }
   BlockComment { LongComment | ShortComment }
+
 }
 
-Expression { StartStache SubExpression EndStache | Block }
+StartOpenBlockStache[closedBy="EndStache"] { "{{#" }
+StartCloseBlockStache[closedBy="EndStache"] { "{{/" }
+StartStache[closedBy="EndStache"] { "{{" }
+EndStache[openedBy="StartStache | StartShortComment | StartOpenBlockStache | StartCloseBlockStache"] { "}}" }
+
+StartShortComment[closedBy="EndStache"] { "{{!" }
+StartLongComment[closedBy="EndLongComment"] { "{{!--" }
+EndLongComment[openedBy="StartLongComment"] { "--}}" }
+
+SubExpStart[closedBy="SubExpEnd"] { "(" }
+SubExpEnd[openedBy="SubExpStart"] { ")" }
+
+Expression {
+  StartStache SubExpression EndStache
+  | Block
+}
 
 Block {
   StartBlock
@@ -20,7 +36,7 @@ Block {
 As { kw<"as"> "|" list<name> "|" }
 
 StartBlock[closedBy=EndBlock] {
-  StartOpenBlockStache Function SubExpression? As? EndStache
+  StartOpenBlockStache Function invisibles SubExpression? As? EndStache
 }
 EndBlock[openedBy=StartBlock] {
   StartCloseBlockStache Function EndStache
@@ -28,7 +44,12 @@ EndBlock[openedBy=StartBlock] {
 
 Function { if | let | each | else | name }
 
-SubExpression { list<Value> NamedArgs? }
+SubExpression {
+  list<Value>
+  NamedArgs?
+}
+
+
 Value {
   boolean
   | null
@@ -37,17 +58,20 @@ Value {
   | String
   | Number
   | Invocation
+  | Property
   | PropertyPath
 }
 
-Invocation { SubExpStart SubExpression SubExpEnd }
+Invocation { invisibles? SubExpStart SubExpression SubExpEnd invisibles? }
 
 Pair { string "=" Value }
 NamedArgs { list<Pair> }
 
+@precedence { Invocation @left, NamedArgs @left, Pair @left, Value @left }
+
 Argument { "@" identifier }
 Property { this | Argument | identifier }
-PropertyPath { Property ("." identifier)* }
+PropertyPath { Property ("." identifier)+ }
 
 boolean {
   @specialize[@name=BooleanLiteral]<identifier, "true" | "false">
@@ -65,6 +89,8 @@ undefined { kw<"undefined"> }
 
 Number { number }
 
+
+
 @tokens {
   invisibles { @whitespace+ }
   number { @digit+ | (@digit+ ("." @digit*))}
@@ -74,20 +100,8 @@ Number { number }
   name { word }
   identifier { word }
 
-  StartOpenBlockStache[closedBy="EndStache"] { "{{#" }
-  StartCloseBlockStache[closedBy="EndStache"] { "{{/" }
-  StartStache[closedBy="EndStache"] { "{{" }
-  EndStache[openedBy="StartStache | StartShortComment | StartOpenBlockStache | StartCloseBlockStache"] { "}}" }
 
-  StartShortComment[closedBy="EndStache"] { "{{!" }
-  StartLongComment[closedBy="EndLongComment"] { "{{!--" }
-  EndLongComment[openedBy="StartLongComment"] { "--}}" }
-
-  SubExpStart[closedBy="SubExpEnd"] { "(" }
-  SubExpEnd[openedBy="SubExpStart"] { ")" }
-
-
-  Text { (@asciiLetter | invisibles)+ }
+  Text { (@asciiLetter | invisibles | @digit)+ }
 
   string {
    "\"" !["]* "\"" |
@@ -98,11 +112,11 @@ Number { number }
     identifier,
     name,
     ".", "=",
-    "|", " ",
-    SubExpStart, SubExpEnd,
-    StartLongComment, EndLongComment,
-    StartShortComment, StartOpenBlockStache, StartCloseBlockStache,
-    StartStache, EndStache,
+    "|",
+    /* SubExpStart, SubExpEnd, */
+    /* StartLongComment, EndLongComment, */
+    /* StartShortComment, StartOpenBlockStache, StartCloseBlockStache, */
+    /* StartStache, EndStache, */
     invisibles,
     string,
     number,
@@ -112,7 +126,7 @@ Number { number }
 
 
 // Helper And Special Things
-list<item> { item (" " item)* }
+list<item> { item (invisibles item)* }
 kw<term> { @specialize[@name={term}]<identifier, term> }
 
 
