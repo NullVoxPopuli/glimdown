@@ -1,13 +1,16 @@
-@top Glimmer { Expression* }
-@skip { invisibles | Text }
-@skip {} {
-  String { string }
-  ShortComment { "{{!" "}}" }
-  LongComment { "{{!--" "--}}" }
-  BlockComment { LongComment | ShortComment }
-}
+@detectDelim
+@top Glimmer { ( Expression | BlockComment )* }
 
-Expression { moustache<SubExpression> | Block | BlockComment }
+@skip { invisibles | Text }
+/* @skip {} { */
+  String { string }
+
+  ShortComment { StartShortComment EndStache }
+  LongComment { StartLongComment EndLongComment }
+  BlockComment { LongComment | ShortComment }
+/* } */
+
+Expression { StartStache SubExpression EndStache | Block }
 
 Block {
   StartBlock
@@ -16,11 +19,11 @@ Block {
 }
 As { kw<"as"> "|" list<name> "|" }
 
-StartBlock[closedBy="EndBlock"] {
-  "{{#" Function SubExpression? As? "}}"
+StartBlock[closedBy=EndBlock] {
+  StartOpenBlockStache Function SubExpression? As? EndStache
 }
-EndBlock[openedBy="StartBlock"] {
-  "{{/" Function "}}"
+EndBlock[openedBy=StartBlock] {
+  StartCloseBlockStache Function EndStache
 }
 
 Function { if | let | each | else | name }
@@ -37,14 +40,14 @@ Value {
   | PropertyPath
 }
 
-Invocation { "(" SubExpression ")" }
+Invocation { SubExpStart SubExpression SubExpEnd }
 
 Pair { string "=" Value }
 NamedArgs { list<Pair> }
 
-Argument { "@" name }
-Property { this | Argument | name }
-PropertyPath { Property ("." name)}
+Argument { "@" identifier }
+Property { this | Argument | identifier }
+PropertyPath { Property ("." identifier)* }
 
 boolean {
   @specialize[@name=BooleanLiteral]<identifier, "true" | "false">
@@ -71,10 +74,20 @@ Number { number }
   name { word }
   identifier { word }
 
-  Text { _+ }
+  StartOpenBlockStache[closedBy="EndStache"] { "{{#" }
+  StartCloseBlockStache[closedBy="EndStache"] { "{{/" }
+  StartStache[closedBy="EndStache"] { "{{" }
+  EndStache[openedBy="StartStache | StartShortComment | StartOpenBlockStache | StartCloseBlockStache"] { "}}" }
 
-  @precedence { identifier, Text }
-  @precedence { name, Text }
+  StartShortComment[closedBy="EndStache"] { "{{!" }
+  StartLongComment[closedBy="EndLongComment"] { "{{!--" }
+  EndLongComment[openedBy="StartLongComment"] { "--}}" }
+
+  SubExpStart[closedBy="SubExpEnd"] { "(" }
+  SubExpEnd[openedBy="SubExpStart"] { ")" }
+
+
+  Text { (@asciiLetter)+ }
 
   string {
    "\"" !["]* "\"" |
@@ -84,10 +97,12 @@ Number { number }
   @precedence {
     identifier,
     name,
-    "(", ")", "|", ".", "@", "="
-    "{{#", "{{/", "|", " ",
-    "{{!--", "--}}",
-    "{{", "}}", "{{!",
+    ".", "=",
+    "|", " ",
+    SubExpStart, SubExpEnd,
+    StartLongComment, EndLongComment,
+    StartShortComment, StartOpenBlockStache, StartCloseBlockStache,
+    StartStache, EndStache,
     invisibles,
     string,
     number,
@@ -99,7 +114,6 @@ Number { number }
 // Helper And Special Things
 list<item> { item (" " item)* }
 kw<term> { @specialize[@name={term}]<identifier, term> }
-moustache<content> { "{{" content "}}" }
 
 
 @external propSource glimmerHighlighting from './highlight'

@@ -6,11 +6,39 @@
 
 Glimmer(
   Expression(
+    StartStache,
     SubExpression(
-      Value(Argument)
-    )
+      Value(PropertyPath(Property(Argument)))
+    ),
+    EndStache
   )
 )
+
+# Function invocation (compressed)
+
+{{(myFunction @foo)}}
+
+==>
+
+Glimmer(
+  Expression(
+    StartStache,
+    SubExpression(
+      Value(
+        Invocation(
+          SubExpStart,
+          SubExpression(
+            Value(PropertyPath(Property)),
+            Value(PropertyPath(Property(Argument)))
+          ),
+          SubExpEnd
+        )
+      )
+    ),
+    EndStache
+  )
+)
+
 
 
 # Function invocation
