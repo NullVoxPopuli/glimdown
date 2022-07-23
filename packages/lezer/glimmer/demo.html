@@ -1,0 +1,139 @@
+<!--
+run `pnpm demo` to view this file
+
+currently only works in chrome due to the need for importmap support
+-->
+<html>
+  <head>
+    <script type="importmap">
+    {
+      "imports": {
+        "@lezer/lr": "https://esm.run/@lezer/lr",
+        "@lezer/highlight": "https://esm.run/@lezer/highlight",
+        "@codemirror/view": "https://esm.run/@codemirror/view",
+        "@codemirror/state": "https://cdn.jsdelivr.net/npm/@codemirror/state@6.0.1/+esm",
+        "@codemirror/lint": "https://esm.run/@codemirror/lint",
+        "@codemirror/language": "https://esm.run/@codemirror/language",
+        "@codemirror/lang-javascript": "https://esm.run/@codemirror/lang-javascript",
+        "@codemirror/lang-html": "https://esm.run/@codemirror/lang-html",
+        "@codemirror/lang-markdown": "https://esm.run/@codemirror/lang-markdown",
+        "@codemirror/theme-one-dark": "https://esm.run/@codemirror/theme-one-dark",
+        "@codemirror/autocomplete": "https://esm.run/@codemirror/autocomplete",
+        "codemirror": "https://esm.run/codemirror",
+        "common-tags": "http://esm.run/common-tags"
+      }
+    }
+    </script>
+    <script type="module">
+      import { stripIndent } from 'common-tags';
+
+      // CodeMirror
+      import { completeFromList, completionKeymap } from '@codemirror/autocomplete';
+      import { Compartment, EditorSelection, EditorState } from '@codemirror/state';
+      import { keymap, EditorView, lineNumbers, highlightActiveLineGutter, highlightActiveLine } from '@codemirror/view';
+
+      // Language Stuff
+      import { javascriptLanguage, javascript } from '@codemirror/lang-javascript';
+      import { html, htmlLanguage } from '@codemirror/lang-html';
+      import { markdown, markdownKeymap, markdownLanguage } from '@codemirror/lang-markdown';
+      import { HighlightStyle, syntaxHighlighting, LanguageSupport, LRLanguage, LanguageDescription } from '@codemirror/language';
+
+      // Local Stuff
+      import { parser } from './dist/index.es.js';
+      import { glimmerHighlighting as highlight } from './src/highlight.js';
+
+      import { oneDark } from './theme.js';
+
+      const language = LRLanguage.define({
+        parser: parser.configure({ props: [ highlight ]}),
+        languageData: {
+          commentTokens: {
+            block: { open: '{{!--', close: '--}}' },
+          },
+        }
+      });
+
+      const configuredLanguage = new LanguageSupport(language, []);
+
+      const gjs = stripIndent`
+        import { helper } from '@ember/component/helper';
+        import { modifier } from 'ember-modifier';
+
+        const plusOne = helper(([num]) => num + 1);
+
+        const setScrollPosition = modifier((element, [position]) => {
+          element.scrollTop = position
+        });
+
+        <template>
+          <div class="scroll-container" {{setScrollPosition @scrollPos}}>
+            {{#each @items as |item index|}}
+              Item #{{plusOne index}}: {{item}}
+            {{/each}}
+          </div>
+        </template>
+      `;
+
+      const hbs = stripIndent`
+        {{two}}
+         <Nested::Component
+          class="some classes
+            {{if (this.someHelper this.foo 12)
+               "classes when true"
+               "classes when false"
+            }}
+          "
+          @doAction={{fn this.someAction 120}}
+          @argB={{hash
+            foo="string"
+            bar=true
+            baz=120
+            yolo=(array 12 "string" (hash foo=this.something))
+            bax=(fn this.someAction 120)
+          }}
+          {{resize this.handleResize (fn this.idk 2 "str")}}
+          as |foo|
+        >
+          <:block as |foo, baz|>
+            {{foo}}
+
+            {{#let foo.bar 12 as |fooBar num|}}
+              <fooBar @num={{num}} @arg={{12}} />
+            {{/let}}
+
+            {{! comment }}
+            {{!-- block }}
+              TODO: Indentation is broken after that
+              comment --}}
+
+            <baz.component />
+          </:block>
+        </Nested::Component>
+      `;
+
+      const element = document.querySelector('#test-editor');
+      const view = new EditorView({
+        doc: hbs,
+        parent: element,
+        extensions: [
+          // Not CDN compatible
+          // basicSetup,
+          lineNumbers(),
+          highlightActiveLine(),
+          highlightActiveLineGutter(),
+          // configuredLanguage(),
+          javascript(),
+          // html(),
+
+          // Style
+          ...oneDark,
+        ],
+      });
+
+      console.log({ view });
+    </script>
+  </head>
+  <body>
+    <div id="test-editor"></div>
+  </body>
+</html>

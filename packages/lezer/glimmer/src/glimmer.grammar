@@ -1,0 +1,134 @@
+@detectDelim
+@top Glimmer { ( Expression | BlockComment )* }
+
+@skip { Text }
+@skip { } {
+  String { string }
+
+  ShortComment { StartShortComment Text* EndStache }
+  LongComment { StartLongComment Text* EndLongComment }
+  BlockComment { LongComment | ShortComment }
+
+}
+
+StartOpenBlockStache[closedBy="EndStache"] { "{{#" }
+StartCloseBlockStache[closedBy="EndStache"] { "{{/" }
+StartStache[closedBy="EndStache"] { "{{" }
+EndStache[openedBy="StartStache | StartShortComment | StartOpenBlockStache | StartCloseBlockStache"] { "}}" }
+
+StartShortComment[closedBy="EndStache"] { "{{!" }
+StartLongComment[closedBy="EndLongComment"] { "{{!--" }
+EndLongComment[openedBy="StartLongComment"] { "--}}" }
+
+SubExpStart[closedBy="SubExpEnd"] { "(" }
+SubExpEnd[openedBy="SubExpStart"] { ")" }
+
+Expression {
+  StartStache SubExpression EndStache
+  | Block
+}
+
+Block {
+  StartBlock
+  Expression*
+  EndBlock
+}
+As { kw<"as"> "|" list<name> "|" }
+
+StartBlock[closedBy=EndBlock] {
+  StartOpenBlockStache Function invisibles SubExpression? As? EndStache
+}
+EndBlock[openedBy=StartBlock] {
+  StartCloseBlockStache Function EndStache
+}
+
+Function { if | let | each | else | name }
+
+SubExpression {
+  list<Value>
+  NamedArgs?
+}
+
+
+Value {
+  boolean
+  | null
+  | undefined
+  | Function
+  | String
+  | Number
+  | Invocation
+  | Property
+  | PropertyPath
+}
+
+Invocation { invisibles? SubExpStart SubExpression SubExpEnd invisibles? }
+
+Pair { string "=" Value }
+NamedArgs { list<Pair> }
+
+@precedence { Invocation @left, NamedArgs @left, Pair @left, Value @left }
+
+Argument { "@" identifier }
+Property { this | Argument | identifier }
+PropertyPath { Property ("." identifier)+ }
+
+boolean {
+  @specialize[@name=BooleanLiteral]<identifier, "true" | "false">
+}
+
+let { kw<"let"> }
+each { kw<"each"> }
+if { kw<"if"> }
+else { kw<"else"> }
+
+this { kw<"this"> }
+null { kw<"null"> }
+undefined { kw<"undefined"> }
+
+
+Number { number }
+
+
+
+@tokens {
+  invisibles { @whitespace+ }
+  number { @digit+ | (@digit+ ("." @digit*))}
+
+  identifierChar { @asciiLetter | $[_$\u{a1}-\u{10ffff}] }
+  word { identifierChar (identifierChar | @digit)* }
+  name { word }
+  identifier { word }
+
+
+  Text { (@asciiLetter | invisibles | @digit)+ }
+
+  string {
+   "\"" !["]* "\"" |
+    "\'" ![']* "\'"
+  }
+
+  @precedence {
+    identifier,
+    name,
+    ".", "=",
+    "|",
+    /* SubExpStart, SubExpEnd, */
+    /* StartLongComment, EndLongComment, */
+    /* StartShortComment, StartOpenBlockStache, StartCloseBlockStache, */
+    /* StartStache, EndStache, */
+    invisibles,
+    string,
+    number,
+    Text
+  }
+}
+
+
+// Helper And Special Things
+list<item> { item (invisibles item)* }
+kw<term> { @specialize[@name={term}]<identifier, term> }
+
+
+@external propSource glimmerHighlighting from './highlight'
+

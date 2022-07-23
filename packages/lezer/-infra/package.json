@@ -1,0 +1,14 @@
+{
+  "name": "@glimdown/lezer-infra",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@codemirror/language": "^6.2.0",
+    "@codemirror/view": "^6.0.3",
+    "@lezer/generator": "^1.0.0",
+    "@lezer/highlight": "^1.0.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
+    "rollup": "^2.52.2"
+  }
+}

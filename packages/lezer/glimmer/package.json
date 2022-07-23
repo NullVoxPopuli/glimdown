@@ -1,0 +1,35 @@
+{
+  "name": "lezer-glimmer",
+  "version": "0.0.0-alpha.0",
+  "author": "NullVoxPopuli",
+  "license": "MIT",
+  "main": "dist/index.cjs",
+  "type": "module",
+  "exports": {
+    "import": "./dist/index.es.js",
+    "require": "./dist/index.cjs"
+  },
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nullvoxpopuli/glimdown.git",
+    "path": "packages/lezer/glimmer"
+  },
+  "devDependencies": {
+    "@glimdown/lezer-infra": "*",
+    "@lezer/generator": "^1.0.0",
+    "mocha": "^9.0.1",
+    "rollup": "^2.52.2"
+  },
+  "dependencies": {
+    "@lezer/lr": "^1.0.0",
+    "@lezer/highlight": "^1.0.0"
+  },
+  "scripts": {
+    "build": "lezer-generator src/glimmer.grammar -o src/parser && rollup -c",
+    "build-debug": "lezer-generator src/glimmer.grammar --names -o src/parser && rollup -c",
+    "demo": "pnpx http-server . -i",
+    "test": "mocha ../-infra/test.js"
+  }
+}
