@@ -1,12 +1,12 @@
-import { htmlLanguage } from '@codemirror/lang-html';
 import { syntaxTree } from '@codemirror/language';
 import { EditorState } from '@codemirror/state';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { EditorView } from '@codemirror/view';
 import { basicSetup } from 'codemirror';
 
+import { printTree } from '@glimdown/codemirror-dev-preview/print-tree';
+
 import { glimmer, glimmerParser } from '../dist/';
-import { printTree } from './print-lezer-tree';
 
 const testDoc = `
   {{! 

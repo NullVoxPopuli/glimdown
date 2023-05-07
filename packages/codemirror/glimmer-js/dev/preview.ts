@@ -1,12 +1,11 @@
-import { htmlLanguage } from '@codemirror/lang-html';
-import { javascriptLanguage } from '@codemirror/lang-javascript';
 import { syntaxTree } from '@codemirror/language';
 import { EditorState } from '@codemirror/state';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { EditorView } from '@codemirror/view';
 import { basicSetup } from 'codemirror';
 
-import { printTree } from '../../dev/print-lezer-tree';
+import { printTree } from '@glimdown/codemirror-dev-preview/print-tree';
+
 import { gjs, metaParser } from '../dist/';
 
 const testDoc = `

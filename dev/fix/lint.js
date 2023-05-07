@@ -2,8 +2,39 @@ import path from "node:path";
 
 import { packageJson, project } from "ember-apply";
 import fse from "fs-extra";
+import latestVersion from 'latest-version';
 
 let root = await project.gitRoot();
+
+const VERSION_CACHE = new Map();
+
+async function versionFor(name) {
+  if (VERSION_CACHE.has(name)) {
+    return VERSION_CACHE.get(name);
+  }
+
+  let version = await latestVersion(name);
+
+  VERSION_CACHE.set(name, version);
+
+  return version;
+}
+
+async function lastestOfAll(dependencies) {
+  let result = {};
+
+  let promises = dependencies.map(async dep => {
+    return [dep, await versionFor(dep)];
+  });
+
+  let resolved = await Promise.all(promises);
+
+  for (let [dep, version] of resolved) {
+    result[dep] = `^${version}`;
+  }
+
+  return result;
+}
 
 for await (let workspace of await project.getWorkspaces()) {
   if (workspace === root) continue;
@@ -11,14 +42,16 @@ for await (let workspace of await project.getWorkspaces()) {
   await packageJson.removeDevDependencies(["eslint-plugin-prettier"]);
 
   await packageJson.addDevDependencies(
-    {
-      "@nullvoxpopuli/eslint-configs": "latest",
-      "@typescript-eslint/eslint-plugin": "latest",
-      "@typescript-eslint/parser": "latest",
-      eslint: "latest",
-      prettier: "latest",
-      typescript: "latest",
-    },
+    await lastestOfAll([
+      "@babel/core",
+      "@babel/eslint-parser",
+      "@nullvoxpopuli/eslint-configs",
+      "@typescript-eslint/eslint-plugin",
+      "@typescript-eslint/parser",
+      "eslint",
+      "prettier",
+      "typescript",
+    ]),
     workspace
   );
 

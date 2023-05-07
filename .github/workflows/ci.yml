@@ -1,0 +1,47 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+##############################################################
+
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # cancel-in-progress: true
+
+permissions:
+  contents: read
+
+##############################################################
+
+jobs:
+
+
+  install_dependencies:
+    name: Setup
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: TurboRepo local server
+      uses: felixmosh/turborepo-gh-artifacts@v2
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+    - uses: wyvox/action@v1 
+
+##############################################################
+
+  lints:
+    name: "Lints"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [install_dependencies]
+
+    steps:
+      - uses: wyvox/action@v1 
+      - name: TurboRepo local server
+        uses: felixmosh/turborepo-gh-artifacts@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - run: pnpm lint
+
