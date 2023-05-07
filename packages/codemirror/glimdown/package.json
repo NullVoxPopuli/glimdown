@@ -31,7 +31,6 @@
   "scripts": {
     "build": "lezer-generator src/glimdown.grammar -o src/parser && rollup -c",
     "build-debug": "lezer-generator src/glimdown.grammar --names -o src/parser && rollup -c",
-    "test": "mocha ../-infra/test.js",
     "_:lint:js": "pnpm -w exec lint js",
     "_:lint:js:fix": "pnpm -w exec lint js:fix",
     "_:lint:prettier:fix": "pnpm -w exec lint prettier:fix",

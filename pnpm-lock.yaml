@@ -479,6 +479,9 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^5.59.2
         version: 5.59.2(eslint@8.40.0)(typescript@5.0.4)
+      '@vitest/coverage-c8':
+        specifier: ^0.31.0
+        version: 0.31.0(vitest@0.31.0)
       c8:
         specifier: ^7.13.0
         version: 7.13.0
@@ -3049,6 +3052,19 @@ packages:
     dependencies:
       '@typescript-eslint/types': 5.59.2
       eslint-visitor-keys: 3.4.1
+    dev: true
+
+  /@vitest/coverage-c8@0.31.0(vitest@0.31.0):
+    resolution: {integrity: sha512-h72qN1D962AO7UefQVulm9JFP5ACS7OfhCdBHioXU8f7ohH/+NTZCgAqmgcfRNHHO/8wLFxx+93YVxhodkEJVA==}
+    peerDependencies:
+      vitest: '>=0.30.0 <1'
+    dependencies:
+      '@ampproject/remapping': 2.2.1
+      c8: 7.13.0
+      magic-string: 0.30.0
+      picocolors: 1.0.0
+      std-env: 3.3.3
+      vitest: 0.31.0
     dev: true
 
   /@vitest/expect@0.31.0:

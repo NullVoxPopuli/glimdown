@@ -1,7 +1,14 @@
+# Deps
 node_modules/
+
+# Outputs
 dist/
 declarations/
+coverage/
+
+# Cache
 .turbo/
-yarn.lock
-.pnpm-debug.log
 .eslintcache
+
+# Logs
+.pnpm-debug.log
