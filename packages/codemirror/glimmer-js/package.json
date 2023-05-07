@@ -28,17 +28,17 @@
     "@nullvoxpopuli/eslint-configs": "^3.1.3",
     "@types/mocha": "^10.0.1",
     "codemirror": "^6.0.1",
-    "concurrently": "^7.2.2",
+    "concurrently": "^8.0.1",
     "eslint": "^8.38.0",
-    "mocha": "^9.2.2",
+    "mocha": "^10.2.0",
     "prettier": "^2.8.7",
     "typescript": "5.0.4",
     "vite": "^4.2.1"
   },
   "dependencies": {
-    "@codemirror/lang-css": "^6.1.1",
+    "@codemirror/lang-css": "^6.2.0",
     "@codemirror/lang-html": "^6.4.3",
-    "@codemirror/lang-javascript": "^6.1.6",
+    "@codemirror/lang-javascript": "^6.1.7",
     "@lezer/highlight": "^1.0.0",
     "@lezer/javascript": "^1.4.2",
     "@lezer/lr": "^1.0.0"
@@ -54,5 +54,8 @@
     "lint:js:fix": "eslint . --fix",
     "build": "cm-buildhelper src/index.ts",
     "test": "mocha ../-infra/test.js"
+  },
+  "volta": {
+    "extends": "../../../package.json"
   }
 }

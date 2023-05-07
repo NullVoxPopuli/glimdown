@@ -24,5 +24,8 @@
     "build": "lezer-generator src/glimdown.grammar -o src/parser && rollup -c",
     "build-debug": "lezer-generator src/glimdown.grammar --names -o src/parser && rollup -c",
     "test": "mocha ../-infra/test.js"
+  },
+  "volta": {
+    "extends": "../../../package.json"
   }
 }

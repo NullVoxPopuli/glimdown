@@ -50,5 +50,8 @@
     "lint:js": "pnpm -w exec lint js",
     "lint:js:fix": "pnpm -w exec lint js:fix",
     "build": "cm-buildhelper src/index.ts"
+  },
+  "volta": {
+    "extends": "../../../package.json"
   }
 }

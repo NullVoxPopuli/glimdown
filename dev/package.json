@@ -4,10 +4,13 @@
   "type": "module",
   "version": "0.0.0",
   "bin": {
-    "lint": "./lint.js"
+    "lint": "./bin/lint.js"
   },
   "dependencies": {
     "ember-apply": "^2.6.5",
     "execa": "^7.1.1"
+  },
+  "volta": {
+    "extends": "../package.json"
   }
 }
