@@ -8,8 +8,8 @@
   "private": true,
   "scripts": {
     "test": "turbo run test --output-logs errors-only",
-    "lint:fix": "turbo run lint:fix --output-logs errors-only",
-    "lint": "turbo run lint --output-logs errors-only"
+    "lint:fix": "turbo run _:lint:fix --output-logs errors-only",
+    "lint": "turbo run _:lint --output-logs errors-only"
   },
   "devDependencies": {
     "@glimdown/dev": "workspace:*",

@@ -34,9 +34,9 @@ async function run() {
     case "js":
       return execaCommand(`pnpm eslint .`, { cwd });
     case "fix":
-      return execaCommand(`pnpm turbo lint:fix`);
+      return execaCommand(`pnpm turbo _:lint:fix`);
     default:
-      return execaCommand(`pnpm turbo lint`);
+      return execaCommand(`pnpm turbo _:lint`);
   }
 }
 

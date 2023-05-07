@@ -57,12 +57,12 @@ for await (let workspace of await project.getWorkspaces()) {
 
   await packageJson.addScripts(
     {
-      "lint:prettier:fix": "pnpm -w exec lint prettier:fix",
-      "lint:prettier": "pnpm -w exec lint prettier",
-      "lint:fix": "pnpm -w exec lint fix",
       lint: "pnpm -w exec lint",
-      "lint:js": "pnpm -w exec lint js",
-      "lint:js:fix": "pnpm -w exec lint js:fix",
+      "lint:fix": "pnpm -w exec lint fix",
+      "_:lint:js": "pnpm -w exec lint js",
+      "_:lint:js:fix": "pnpm -w exec lint js:fix",
+      "_:lint:prettier:fix": "pnpm -w exec lint prettier:fix",
+      "_:lint:prettier": "pnpm -w exec lint prettier",
     },
     workspace
   );

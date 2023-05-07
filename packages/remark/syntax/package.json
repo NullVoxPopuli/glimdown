@@ -26,7 +26,11 @@
     "test:watch": "vitest --watch",
     "lint:prettier:fix": "pnpm -w exec lint prettier:fix",
     "lint:prettier": "pnpm -w exec lint prettier",
-    "lint:js:fix": "pnpm -w exec lint js:fix"
+    "lint:js:fix": "pnpm -w exec lint js:fix",
+    "_:lint:js": "pnpm -w exec lint js",
+    "_:lint:js:fix": "pnpm -w exec lint js:fix",
+    "_:lint:prettier:fix": "pnpm -w exec lint prettier:fix",
+    "_:lint:prettier": "pnpm -w exec lint prettier"
   },
   "devDependencies": {
     "@nullvoxpopuli/eslint-configs": "^3.1.3",
