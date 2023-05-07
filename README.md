@@ -39,12 +39,13 @@ let { component: myComponent, name, error } = await compile(processed);
 ```
 
 ### Unified/Remark/Rehype
-```js
-import { unified } from 'unified'
-import remarkRehype from 'remark-rehype'
-import rehypeStringify from 'rehype-stringify'
 
-import { glimdown } from '@glimdown/remark';
+```js
+import { unified } from "unified";
+import remarkRehype from "remark-rehype";
+import rehypeStringify from "rehype-stringify";
+
+import { glimdown } from "@glimdown/remark";
 
 let code = `
 # Glimdown
@@ -61,10 +62,7 @@ const scrollTo = () => { /* ...*/ }
 
 `;
 
-let stack = unified()
-  .use(glimdown)
-  .use(remarkRehype)
-  .use(rehypeStringify);
+let stack = unified().use(glimdown).use(remarkRehype).use(rehypeStringify);
 
 let processed = await stack.process(code);
 let extractedDemos = processed.data.demos;
@@ -75,6 +73,7 @@ let html = processed.toString();
 ```
 
 if in an ember environment,
+
 ```js
 import Component from '@glimmer/component';
 import { cached } from '@glimmer/tracking';
@@ -116,6 +115,7 @@ export default class DemoRenderer extends Component {
   }
 }
 ```
+
 ```hbs
 <this.rendered />
 ```

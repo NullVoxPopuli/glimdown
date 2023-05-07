@@ -1,0 +1,139 @@
+@top Template { entity* }
+
+@skip { whitespace }
+
+GlimmerTemplateTag {
+  templateTagStart templateTagContent* templateTagEnd
+}
+
+entity { 
+  GlimmerTemplateTag
+  | Comment
+  | MoustacheExpression
+  | Splattributes
+  | NamedBlock
+  // Arguments needs to be "anywhere", beacuse it can be in Element-space.
+  // TODO: only allow within Element-space or in an SExpression
+  // TODO: define what Element-space is
+  //       (more parseMixed logic?)
+  | Argument
+}
+
+Splattributes { "...attributes" }
+NamedBlock { ":" identifier } 
+Argument { "@" identifier }
+Function { ~identifier }
+
+CallExpression { "(" ~Function SExpression? (identifier Is SExpression)? ")"  }
+
+SExpression { 
+    CallExpression
+    | identifier
+    | Is 
+    | Pipe
+    | Argument
+    //| String
+    | keywords
+}
+
+@external tokens shortCommentContent from "./tokens.js" { shortCommentContent }
+@external tokens longCommentContent from "./tokens.js" { longCommentContent }
+@external tokens htmlCommentContent from "./tokens.js" { htmlCommentContent }
+@external tokens templateTagContent from "./tokens.js" { templateTagContent }
+
+Comment { ShortComment | LongComment | HtmlComment }
+ShortComment { shortCommentStart shortCommentContent* shortCommentEnd } 
+LongComment { longCommentStart longCommentContent* longCommentEnd }
+HtmlComment { htmlCommentStart (htmlCommentContent | MoustacheExpression)* htmlCommentEnd }
+
+
+String {
+  "\"" attributeValueContentDouble? "\"" |
+  "\'" attributeValueContentSingle? "\'"
+}
+
+
+attributeValueContentDouble[@name=AttributeValueContent] {
+  (attributeValueContentCharDouble | attributeValueContentEntity)+
+}
+
+attributeValueContentSingle[@name=AttributeValueContent] {
+  (attributeValueContentCharSingle | attributeValueContentEntity)+
+}
+
+attributeValueContentEntity {
+  MoustacheExpression
+}
+
+
+@skip {} {
+  MoustacheExpression { 
+    "{{" SExpression* "}}" 
+    | "{{#" SExpression* "}}"
+    | "{{/" identifier "}}"
+
+  }
+}
+
+
+keywords {
+  kw<"this">
+  | kw<"as">
+  | kw<"if"> | kw<"unless">
+  | kw<"else">
+  | kw<"let">
+  | kw<"and"> | kw<"or"> | kw<"not">
+  | kw<"eq"> | kw<"neq"> | kw<"not-eq">
+  | kw<"gt"> | kw<"gte">
+  | kw<"lt"> | kw<"lte">
+  | kw<"array">
+  | kw<"concat">
+  | kw<"hash">
+  | kw<"each"> | kw<"each-in">
+  | kw<"on">
+  | kw<"modifier"> | kw<"component"> | kw<"helper">
+  | kw<"in-element">
+  | kw<"yield"> | kw<"outlet">
+}
+
+kw<term> { @specialize[@name={term}]<identifier, term> }
+
+@tokens {
+  Text { ![{] Text? | "{" (@eof | ![%{] Text?) }
+  space { @whitespace+ }
+  whitespace { (std.whitespace | ",")+ }
+
+  
+  "{{"[closedBy="}}"]
+  "}}"[openedBy="{{"]
+  "("[closedBy="("]
+  ")"[openedBy=")"]
+  Is { "=" }
+  Pipe { "|" }
+
+  templateTagStart[@name="TemplateTag", closedBy=templateTagEnd] { "<template>" }
+  templateTagEnd[@name="TemplateTag", openedBy=templateTagStart] { "</template>" }
+
+  
+  identifierChar { @asciiLetter }
+  word { identifierChar (identifierChar | @digit)* }
+  identifier { word }
+
+  attributeValueContentCharDouble { !["&{] }
+  attributeValueContentCharSingle { !['&{] }
+
+  @precedence { attributeValueContentCharDouble whitespace }
+  @precedence { attributeValueContentCharSingle whitespace }
+
+  htmlCommentStart { "<!--" }
+  htmlCommentEnd { "-->" }
+
+  shortCommentStart { "{{!" }
+  shortCommentEnd { "}}" }
+
+  longCommentStart { "{{!--" }
+  longCommentEnd { "--}}" }
+
+}
+
+@external propSource glimmerHighlighting from "./highlight"

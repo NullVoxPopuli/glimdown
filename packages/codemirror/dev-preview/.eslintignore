@@ -1,0 +1,5 @@
+# We don't want to maintain this
+# The original was implemented here:
+#  https://github.com/replit/codemirror-lang-svelte/blob/main/dev/print-lezer-tree.ts
+#
+src/print-lezer-tree.ts

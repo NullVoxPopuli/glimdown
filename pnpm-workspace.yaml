@@ -1,0 +1,12 @@
+packages:
+  # Just Internal
+  - "dev"
+  # Preview / Dev / Debug
+  - "packages/codemirror/*/dev"
+  # Tests, obvs
+  - "packages/codemirror/*/tests"
+  # Potentially publishables
+  - "packages/*"
+  - "packages/remark/*"
+  - "packages/lezer/*"
+  - "packages/codemirror/*"
