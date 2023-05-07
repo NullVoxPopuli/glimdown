@@ -1,5 +1,5 @@
 {
-  "name": "lezer-glimmer-js",
+  "name": "codemirror-lang-glimmer-js",
   "version": "0.0.0-alpha.0",
   "author": "NullVoxPopuli",
   "license": "MIT",
@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@codemirror/buildhelper": "^0.1.16",
-    "@glimdown/lezer-infra": "*",
+    "@glimdown/lezer-infra": "workspace:*",
     "@lezer/common": "^1.0.2",
     "@lezer/generator": "^1.0.0",
     "@nullvoxpopuli/eslint-configs": "^3.1.3",
@@ -33,7 +33,7 @@
     "@babel/core": "^7.21.8"
   },
   "dependencies": {
-    "lezer-glimmer": "workspace:*",
+    "codemirror-lang-glimmer": "workspace:*",
     "@codemirror/lang-css": "^6.2.0",
     "@codemirror/lang-html": "^6.4.3",
     "@codemirror/lang-javascript": "^6.1.7",
@@ -43,17 +43,13 @@
   },
   "scripts": {
     "dev": "node ./dev/watch.cjs src/index.ts",
-    "lint:prettier:fix": "pnpm -w exec lint prettier:fix",
-    "lint:prettier": "pnpm -w exec lint prettier",
-    "lint:fix": "pnpm -w exec lint fix",
-    "lint:js": "pnpm -w exec lint js",
-    "lint:js:fix": "pnpm -w exec lint js:fix",
     "build": "cm-buildhelper src/index.ts",
-    "lint": "pnpm -w exec lint",
     "_:lint:js": "pnpm -w exec lint js",
     "_:lint:js:fix": "pnpm -w exec lint js:fix",
     "_:lint:prettier:fix": "pnpm -w exec lint prettier:fix",
-    "_:lint:prettier": "pnpm -w exec lint prettier"
+    "_:lint:prettier": "pnpm -w exec lint prettier",
+    "lint": "pnpm -w exec lint",
+    "lint:fix": "pnpm -w exec lint fix"
   },
   "volta": {
     "extends": "../../../package.json"

@@ -16,16 +16,12 @@
     "typescript": "^5.0.4"
   },
   "scripts": {
-    "lint:prettier:fix": "pnpm -w exec lint prettier:fix",
-    "lint:prettier": "pnpm -w exec lint prettier",
-    "lint:fix": "pnpm -w exec lint fix",
-    "lint": "pnpm -w exec lint",
-    "lint:js": "pnpm -w exec lint js",
-    "lint:js:fix": "pnpm -w exec lint js:fix",
     "_:lint:js": "pnpm -w exec lint js",
     "_:lint:js:fix": "pnpm -w exec lint js:fix",
     "_:lint:prettier:fix": "pnpm -w exec lint prettier:fix",
-    "_:lint:prettier": "pnpm -w exec lint prettier"
+    "_:lint:prettier": "pnpm -w exec lint prettier",
+    "lint": "pnpm -w exec lint",
+    "lint:fix": "pnpm -w exec lint fix"
   },
   "dependencies": {
     "@codemirror/state": "^6.2.0",

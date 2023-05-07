@@ -38,10 +38,51 @@ jobs:
     needs: [install_dependencies]
 
     steps:
-      - uses: wyvox/action@v1 
       - name: TurboRepo local server
         uses: felixmosh/turborepo-gh-artifacts@v2
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: wyvox/action@v1 
       - run: pnpm lint
+
+  tests:
+    name: "Tests"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [install_dependencies]
+
+    steps:
+      - name: TurboRepo local server
+        uses: felixmosh/turborepo-gh-artifacts@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: wyvox/action@v1 
+      - run: pnpm test
+
+
+  # https://github.com/changesets/action
+  release:
+    name: Release
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - tests
+
+    steps:
+      - name: TurboRepo local server
+        uses: felixmosh/turborepo-gh-artifacts@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: wyvox/action@v1 
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          # This expects you to have a script called release which does a build for your packages and calls changeset publish
+          publish: pnpm release
+          title: "Release Preview"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 

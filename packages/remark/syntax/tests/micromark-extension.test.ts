@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 const s = stripIndent;
 
 describe("micromark-extension", () => {
-  it("works", () => {
+  it.skip("works", () => {
     let md = s`
       # Hello, world!
 

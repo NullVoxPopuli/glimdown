@@ -7,14 +7,21 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "release": "changeset publish",
     "test": "turbo run test --output-logs errors-only",
     "lint:fix": "turbo run _:lint:fix --output-logs errors-only",
     "lint": "turbo run _:lint --output-logs errors-only"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.26.1",
     "@glimdown/dev": "workspace:*",
     "concurrently": "^8.0.1",
     "turbo": "1.9.3"
+  },
+  "engines": {
+    "node": ">= 18.*",
+    "yarn": "use pnpm",
+    "npm": "use pnpm"
   },
   "volta": {
     "node": "18.16.0",
