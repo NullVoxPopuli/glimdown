@@ -1,6 +1,6 @@
 import { fileTests } from "@lezer/generator/dist/test";
-
 import * as fs from "fs";
+import { before, describe, it } from "mocha";
 import * as path from "path";
 
 let cwd = process.cwd();
@@ -11,7 +11,7 @@ async function runTests() {
   for (let file of fs.readdirSync(caseDir)) {
     if (!/\.txt$/.test(file)) continue;
 
-    let name = /^[^\.]*/.exec(file)[0];
+    let name = /^[^.]*/.exec(file)[0];
 
     describe(name, () => {
       let parser;

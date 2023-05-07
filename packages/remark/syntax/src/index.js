@@ -49,7 +49,6 @@
  */
 export function glimdown(/* options = {} */) {
   // const data = this.data();
-
   // add('micromarkExtensions', mdxjs(options));
   // add('fromMarkdownExtensions', mdxFromMarkdown);
   // add('toMarkdownExtensions', mdxToMarkdown);
@@ -57,7 +56,6 @@ export function glimdown(/* options = {} */) {
   //   extensions: [],
   //   mdastExtensions: [],
   // });
-
   /**
    * @param {string} field
    * @param {unknown} value
@@ -68,7 +66,6 @@ export function glimdown(/* options = {} */) {
   //     /* c8 ignore next 2 */
   //     data[field] ? data[field] : (data[field] = [])
   //   );
-
   //   list.push(value);
   // }
 }

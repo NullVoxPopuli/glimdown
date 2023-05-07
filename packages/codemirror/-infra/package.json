@@ -21,5 +21,13 @@
     "prettier": "latest",
     "typescript": "latest",
     "@nullvoxpopuli/eslint-configs": "latest"
+  },
+  "scripts": {
+    "lint:prettier:fix": "pnpm -w exec lint prettier:fix",
+    "lint:prettier": "pnpm -w exec lint prettier",
+    "lint:fix": "pnpm -w exec lint fix",
+    "lint:js": "pnpm -w exec lint js",
+    "lint:js:fix": "pnpm -w exec lint js:fix",
+    "lint": "pnpm -w exec lint"
   }
 }

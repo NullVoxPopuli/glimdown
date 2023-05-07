@@ -1,15 +1,15 @@
 import path from "node:path";
 
-import { execaCommand } from "execa";
 import { packageJson, project } from "ember-apply";
+import { execaCommand } from "execa";
 
 const [, , command] = process.argv;
 // process.cwd() is whatever pnpm decides to do
-// 
+//
 // Other options:
 //  PNPM_SCRIPT_SRC_DIR
 //  OLDPWD
-const cwd = process.env['INIT_CWD'];
+const cwd = process.env["INIT_CWD"];
 
 const root = await project.gitRoot();
 const manifest = await packageJson.read(cwd);
@@ -27,13 +27,16 @@ async function run() {
     case "prettier":
       return execaCommand(`pnpm prettier -c .`, { cwd });
     case "js:fix":
-      return execaCommand(`pnpm eslint --fix . --cache --cache-strategy content`, { cwd });
+      return execaCommand(
+        `pnpm eslint . --fix --cache --cache-strategy content`,
+        { cwd }
+      );
     case "js":
       return execaCommand(`pnpm eslint .`, { cwd });
     case "fix":
-      return execaCommand(`pnpm turbo lint:fix`)
+      return execaCommand(`pnpm turbo lint:fix`);
     default:
-      return execaCommand(`pnpm turbo lint`)
+      return execaCommand(`pnpm turbo lint`);
   }
 }
 

@@ -49,13 +49,14 @@
     "dev": "concurrently 'npm:dev:*' -restart-tries -1",
     "dev:vite": "vite ./dev/",
     "dev:cm": "node ./dev/watch.cjs src/index.ts",
-    "lint:prettier:fix": "prettier -w .",
-    "lint:prettier": "prettier -c .",
-    "lint:fix": "concurrently 'npm:lint:*:fix' --names 'fix:'",
-    "lint:js": "eslint . --cache",
-    "lint:js:fix": "eslint . --fix",
+    "lint:prettier:fix": "pnpm -w exec lint prettier:fix",
+    "lint:prettier": "pnpm -w exec lint prettier",
+    "lint:fix": "pnpm -w exec lint fix",
+    "lint:js": "pnpm -w exec lint js",
+    "lint:js:fix": "pnpm -w exec lint js:fix",
     "build": "cm-buildhelper src/index.ts",
-    "test": "mocha ../-infra/test.js"
+    "test": "mocha ../-infra/test.js",
+    "lint": "pnpm -w exec lint"
   },
   "volta": {
     "extends": "../../../package.json"

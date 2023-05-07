@@ -58,7 +58,7 @@
       "dependsOn": ["lint:js:fix", "lint:hbs:fix", "lint:prettier:fix"]
     },
     "lint:js:fix": {
-      "outputs": []
+      "outputs": ["lint:prettier:fix"]
     },
     "lint:hbs:fix": {
       "outputs": []
