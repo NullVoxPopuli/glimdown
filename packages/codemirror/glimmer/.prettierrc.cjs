@@ -1,12 +1,17 @@
-'use strict';
+"use strict";
 
 module.exports = {
-  singleQuote: true,
   printWidth: 100,
-  trailingComma: 'es5',
   overrides: [
     {
-      files: ['*.json'],
+      files: ["*.js", "*.ts"],
+      options: {
+        singleQuote: true,
+        trailingComma: "es5",
+      },
+    },
+    {
+      files: ["*.json"],
       options: {
         singleQuote: false,
       },

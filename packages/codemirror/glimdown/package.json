@@ -14,7 +14,13 @@
     "@lezer/generator": "^1.2.3",
     "@rollup/plugin-node-resolve": "^15.0.2",
     "mocha": "^10.2.0",
-    "rollup": "^3.21.5"
+    "rollup": "^3.21.5",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "eslint": "latest",
+    "prettier": "latest",
+    "typescript": "latest",
+    "@nullvoxpopuli/eslint-configs": "latest"
   },
   "dependencies": {
     "@lezer/highlight": "^1.1.4",

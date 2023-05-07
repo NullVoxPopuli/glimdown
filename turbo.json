@@ -52,6 +52,19 @@
     "lint:types": {
       "outputs": [],
       "dependsOn": ["^build"]
+    },
+    "lint:fix": {
+      "outputs": [],
+      "dependsOn": ["lint:js:fix", "lint:hbs:fix", "lint:prettier:fix"]
+    },
+    "lint:js:fix": {
+      "outputs": []
+    },
+    "lint:hbs:fix": {
+      "outputs": []
+    },
+    "lint:prettier:fix": {
+      "outputs": []
     }
   }
 }

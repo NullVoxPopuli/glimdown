@@ -30,6 +30,10 @@ async function run() {
       return execaCommand(`pnpm eslint --fix . --cache --cache-strategy content`, { cwd });
     case "js":
       return execaCommand(`pnpm eslint .`, { cwd });
+    case "fix":
+      return execaCommand(`pnpm turbo lint:fix`)
+    default:
+      return execaCommand(`pnpm turbo lint`)
   }
 }
 
