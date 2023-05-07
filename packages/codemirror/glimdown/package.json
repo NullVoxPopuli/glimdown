@@ -11,14 +11,14 @@
   },
   "devDependencies": {
     "@glimdown/lezer-infra": "*",
-    "@lezer/generator": "^1.0.0",
-    "mocha": "^9.0.1",
-    "rollup": "^2.52.2",
-    "@rollup/plugin-node-resolve": "^9.0.0"
+    "@lezer/generator": "^1.2.3",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "mocha": "^10.2.0",
+    "rollup": "^3.21.5"
   },
   "dependencies": {
-    "@lezer/lr": "^1.0.0",
-    "@lezer/highlight": "^1.0.0"
+    "@lezer/highlight": "^1.1.4",
+    "@lezer/lr": "^1.3.4"
   },
   "scripts": {
     "build": "lezer-generator src/glimdown.grammar -o src/parser && rollup -c",

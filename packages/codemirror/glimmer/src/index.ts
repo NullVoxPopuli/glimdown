@@ -1,6 +1,6 @@
 import { css, cssLanguage } from '@codemirror/lang-css';
-import { htmlCompletionSource } from '@codemirror/lang-html';
-import { javascript, javascriptLanguage, typescriptLanguage } from '@codemirror/lang-javascript';
+import { html, htmlCompletionSource, htmlLanguage } from '@codemirror/lang-html';
+import { javascript } from '@codemirror/lang-javascript';
 import {
   foldNodeProp,
   indentNodeProp,
@@ -10,53 +10,37 @@ import {
 } from '@codemirror/language';
 import { EditorSelection } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
+import { parseMixed } from '@lezer/common';
+import { parser as htmlParser } from '@lezer/html';
 
-import { configureNesting } from './content.js';
-import { parser as svelteParser } from './syntax.grammar';
+import { parser } from './syntax.grammar';
+import { MoustacheExpression } from './syntax.grammar.terms';
 
 import type { Text } from '@codemirror/state';
-import type { Parser, SyntaxNode } from '@lezer/common';
+import type { SyntaxNode } from '@lezer/common';
 
-type NestedLang = {
-  tag: 'script' | 'style' | 'textarea';
-  attrs?: (attrs: { [attr: string]: string }) => boolean;
-  parser: Parser;
-};
+export const glimmerParser = parser;
 
-const defaultNesting: NestedLang[] = [
-  {
-    tag: 'script',
-    attrs: (attrs) => attrs.type === 'text/typescript' || attrs.lang === 'ts',
-    parser: typescriptLanguage.parser,
-  },
-  {
-    tag: 'script',
-    attrs(attrs) {
-      return (
-        !attrs.type ||
-        /^(?:text|application)\/(?:x-)?(?:java|ecma)script$|^module$|^$/i.test(attrs.type)
-      );
-    },
-    parser: javascriptLanguage.parser,
-  },
-  {
-    tag: 'style',
-    attrs(attrs) {
-      return (
-        (!attrs.lang || attrs.lang === 'css' || attrs.lang === 'scss') &&
-        (!attrs.type || /^(text\/)?(x-)?(stylesheet|css|scss)$/i.test(attrs.type))
-      );
-    },
-    parser: cssLanguage.parser,
-  },
-];
+export const glimmerLanguage = LRLanguage.define({
+  parser: parser.configure({
+    wrap: parseMixed((node) => {
+      let { name } = node.type;
 
-export { svelteParser };
+      switch (name) {
+        case 'Template':
+          return null;
+        case 'Comment':
+        case 'MoustacheExpression':
+        case 'NamedBlock':
+        case 'Splattributes':
+        case 'Argument':
+          return { parser };
+      }
 
-export const svelteLanguage = LRLanguage.define({
-  // @ts-expect-error
-  parser: svelteParser.configure({
-    wrap: configureNesting(defaultNesting),
+      console.log(node.type.name);
+
+      return { parser: htmlParser };
+    }),
 
     props: [
       indentNodeProp.add({
@@ -146,7 +130,10 @@ export const svelteLanguage = LRLanguage.define({
 
           if (!first || first.name !== open) return null;
 
-          return { from: first.to, to: last?.name === close ? last.from : node.to };
+          return {
+            from: first.to,
+            to: last?.name === close ? last.from : node.to,
+          };
         },
 
         Element: (node) => {
@@ -155,7 +142,10 @@ export const svelteLanguage = LRLanguage.define({
 
           if (!first || first.name != 'OpenTag') return null;
 
-          return { from: first.to, to: last.name === 'CloseTag' ? last.from : node.to };
+          return {
+            from: first.to,
+            to: last.name === 'CloseTag' ? last.from : node.to,
+          };
         },
       }),
     ],
@@ -167,14 +157,14 @@ export const svelteLanguage = LRLanguage.define({
       devBlock: { open: '{{!--', close: '--}}' },
       devBlockShort: { open: '{{!', close: '}}' },
     },
-    indentOnInput: /^\s*((<\/\w+\W)|(\{:(else|then|catch))|(\{\/(if|each|await|key)))$/,
+    indentOnInput: /^\s*((<\/\w+\W)|(\{:(else|then|catch))|(\{\/(if|unless|each|await|key)))$/,
     wordChars: '-._',
     autocomplete: htmlCompletionSource,
   },
 });
 
-export function svelte() {
-  return new LanguageSupport(svelteLanguage, [javascript().support, css().support, autoCloseTags]);
+export function glimmer() {
+  return new LanguageSupport(glimmerLanguage, [html().support, autoCloseTags]);
 }
 
 // unfortunately the HTML language explicitly checks for the language type,
@@ -184,9 +174,7 @@ function elementName(doc: Text, tree: SyntaxNode | null | undefined, max = doc.l
   if (!tree) return '';
 
   let tag = tree.firstChild;
-  let name =
-    tag &&
-    (tag.getChild('TagName') || tag.getChild('ComponentName'));
+  let name = tag && (tag.getChild('TagName') || tag.getChild('ComponentName'));
 
   return name ? doc.sliceString(name.from, Math.min(name.to, max)) : '';
 }
@@ -197,7 +185,7 @@ const autoCloseTags = EditorView.inputHandler.of((view, from, to, text) => {
     view.state.readOnly ||
     from != to ||
     (text != '>' && text != '/') ||
-    !svelteLanguage.isActiveAt(view.state, from, -1)
+    !glimmerLanguage.isActiveAt(view.state, from, -1)
   )
     return false;
 
@@ -238,7 +226,10 @@ const autoCloseTags = EditorView.inputHandler.of((view, from, to, text) => {
         let insert = `/${name}${hasRightBracket ? '' : '>'}`;
         let pos = head + insert.length + (hasRightBracket ? 1 : 0);
 
-        return { range: EditorSelection.cursor(pos), changes: { from: head, insert } };
+        return {
+          range: EditorSelection.cursor(pos),
+          changes: { from: head, insert },
+        };
       }
     }
 

@@ -7,7 +7,7 @@
  * References:
  *  - https://github.com/mdx-js/mdx/blob/main/packages/remark-mdx/index.js
  */
-import { fromMarkdown } from 'mdast-util-from-markdown';
+import { fromMarkdown } from "mdast-util-from-markdown";
 
 /**
  * Unified plugin for parsing glimdown for use in

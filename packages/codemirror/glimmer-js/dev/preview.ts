@@ -1,113 +1,40 @@
 import { htmlLanguage } from '@codemirror/lang-html';
+import { javascriptLanguage } from '@codemirror/lang-javascript';
 import { syntaxTree } from '@codemirror/language';
 import { EditorState } from '@codemirror/state';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { EditorView } from '@codemirror/view';
 import { basicSetup } from 'codemirror';
 
-import { glimmer, glimmerParser } from '../dist/';
-import { printTree } from './print-lezer-tree';
+import { printTree } from '../../dev/print-lezer-tree';
+import { gjs, metaParser } from '../dist/';
 
 const testDoc = `
-  {{! 
-    simple comment 
-  }}
+  const Foo = <template>
+    {{@arg}}
+  </template>;
 
-  just some text
-  {{call expression}}
+  class Bar {
+    greeting = "hello world!";
 
+    <template>
+      Greeting: {{this.greeting}}!<br>
+    </template>
+  }
 
-  {{!-- 
-    long comment 
-  --}}
+  const code = (text) => JSON.stringify(text, null, 4);
 
-  <!--
-    HTML Comment
-    {{not a comment}}
-    {{!still a comment}}
-    {{!--still a comment--}}
-    -->
-  
-  {{foo.bar}}
-  {{this.foo}}
-  {{this.foo.bar}}  
+  <template>
+    <Foo @arg={{code document.body.innerHTML}} />
 
-  {{#let greeting as |value|}}
-    {{value}}
-  {{/let}}
+    <ul {{someModifier}}>
+      {{#each (array 1 2 (concat "hi" "there")) as |item|}}
+        
+        <li>{{item}}</li>
 
-  {{#if (nested (condition))}}
-    bar
-  {{else}}
-    foo
-  {{/if}}
-
-  {{#unless (nested (condition))}}
-    bar
-  {{else}}
-    foo
-  {{/unless}}
-
-    Hello {{this.name}}!
-
-  {{! inline simple }}
-  {{!-- inline long }}
-
-  <OneLine ...attributes />
-  <OneLine />
-  <Inline />
-  <Empty 
-    attribute="value" 
-    foo=bar 
-    bar={{foo}} 
-    @arg="str" 
-    @arg1={{value}}
-    @arg2={{call something}}
-    @arg3={{ (call something) }}
-    @arg4={{ (call (nested @thing named=@arg)) }}
-    {{someModifier}}
-    {{someModifier 1 (two) three=(four)}}
-  />
-  <WithNamedBlocks @arg="str" @foo={{value}} {{on 'click' this.foo}}>
-    <:loading>
-      Loading...
-    </:loading>
-    <:resolved as |value|>
-      {{value.data.property}}
-    </:resolved>
-  </WithNamedBlocks>
-
-  {{hash foo="hello" bar=(component Inline arg="hi")}}
-  
-  {{array 1 2 @foo @bar}}
-
-  <ul {{someModifier}}>
-    {{#each (array 1 2 (concat "hi" "there")) as |item|}}
-      
-      <li>{{item}}</li>
-
-    {{/each}}
-  </ul>
-
-  <button {{on 'click' handler}}>click me</button>
-
-  <div class="string {{value}}"></div>
-  <div class="string {{value}} still string"></div>
-  <div class='{{if condition "class-name"}}'></div>
-  <div class="{{if condition 'class-name'}}"></div>
-  <div class="{{if condition "class-name"}}"></div>
-
-  {{yield}}
-  {{yield to="elsewhere"}}
-  {{yield foo}}
-  {{yield (hash foo="bar")}}
-  {{yield (hash 
-            c=(component "foo" named=2)
-            m=(modifier "foo" named=2)
-            h=(helper "foo" named=2)
-          )}}
-
-  {{outlet}}
+      {{/each}}
+    </ul>
+  </template>
 `;
 
 const doc = testDoc;
@@ -150,7 +77,7 @@ const mainView = new EditorView({
     doc,
     extensions: [
       basicSetup,
-      glimmer(),
+      gjs(),
       // We can't use HTML as the hosting language
       // (to overlay Glimmer on top of)
       // Because in Glimmer, we can have spaces within double curlies,
@@ -166,7 +93,7 @@ const mainView = new EditorView({
 
 // Glimmer Tree
 const glimmerState = EditorState.create({
-  doc: printTree(glimmerParser.parse(doc), doc),
+  doc: printTree(metaParser.parse(doc), doc),
   extensions: [basicSetup, oneDark, EditorView.lineWrapping, EditorState.readOnly.of(true)],
 });
 const glimmerTree = new EditorView({

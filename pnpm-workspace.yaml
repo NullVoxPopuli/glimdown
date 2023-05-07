@@ -1,5 +1,7 @@
 packages:
-- 'packages/*'
-- 'packages/remark/*'
-- 'packages/lezer/*'
-- 'packages/codemirror/*'
+  - "dev"
+  - "packages/*"
+  - "packages/remark/*"
+  - "packages/lezer/*"
+  - "packages/codemirror/*"
+  - "packages/codemirror/*/tests"

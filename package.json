@@ -1,5 +1,5 @@
 {
-  "name": "glimdown",
+  "name": "glimdown-monorepo-root",
   "version": "0.0.0",
   "description": "Glimmer + Markdown",
   "repository": "git@github.com:NullVoxPopuli/glimdown.git",
@@ -12,32 +12,12 @@
     "lint": "turbo run lint"
   },
   "devDependencies": {
-    "concurrently": "^7.2.2",
-    "turbo": "1.3.1"
-  },
-  "turbo": {
-    "baseBranch": "origin/main",
-    "pipeline": {
-      "start": {
-        "dependsOn": [
-          "^build"
-        ],
-        "cache": false
-      },
-      "build": {
-        "dependsOn": [
-          "^build"
-        ]
-      },
-      "lint": {},
-      "lint:fix": {},
-      "test": {}
-    }
+    "@glimdown/dev": "workspace:*",
+    "concurrently": "^8.0.1",
+    "turbo": "1.9.3"
   },
   "volta": {
     "node": "18.16.0",
-    "yarn": "1.22.17",
-    "npm": "8.3.1",
     "pnpm": "8.2.0"
   }
 }

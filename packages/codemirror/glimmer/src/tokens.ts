@@ -1,11 +1,13 @@
 import { ExternalTokenizer } from '@lezer/lr';
 
 import {
-  Expression as longExprToken,
   htmlCommentContent as htmlCommentToken,
   longCommentContent as longCommentToken,
+  MoustacheExpression as longExprToken,
   shortCommentContent as shortCommentToken,
+  templateTagContent as templateTagToken,
 } from './syntax.grammar.terms';
+import * as all from './syntax.grammar.terms';
 
 import type { InputStream } from '@lezer/lr';
 
@@ -14,6 +16,7 @@ const space = [
   8202, 8232, 8233, 8239, 8287, 12288,
 ];
 
+// Ascii values
 const parenOpen = 40;
 const parenClose = 41;
 const squareOpen = 91;
@@ -40,7 +43,9 @@ const shortCommentEnd = [curlyClose, curlyClose];
 const longCommentEnd = [dash, dash, curlyClose, curlyClose];
 const htmlCommentEnd = [dash, dash, greaterThan];
 
-function matchForComment(commentEndPattern, commentToken, input) {
+const closingTemplateTag = '</template>'.split('').map((char) => char.charCodeAt(0));
+
+export function matchForComment(commentEndPattern, commentToken, input) {
   for (let found = 0, i = 0; ; i++) {
     if (input.next < 0) {
       if (i) input.acceptToken(commentToken);
@@ -54,13 +59,14 @@ function matchForComment(commentEndPattern, commentToken, input) {
       found = 0;
       input.advance();
 
-      continue;
+      break;
     }
 
     if (found === commentEndPattern.length - 1) {
       if (i > commentEndPattern.length - 1) {
         input.acceptToken(commentToken, 1 - commentEndPattern.length);
-        input.advance();
+
+        break;
       } else {
         console.warn('Reached end of comment but there is still content left');
       }
@@ -83,6 +89,10 @@ export const longCommentContent = new ExternalTokenizer((input) => {
 
 export const htmlCommentContent = new ExternalTokenizer((input) => {
   return matchForComment(htmlCommentEnd, htmlCommentToken, input);
+});
+
+export const templateTagContent = new ExternalTokenizer((input) => {
+  return matchForComment(closingTemplateTag, templateTagToken, input);
 });
 
 // TODO: string handler does not handle interpolation

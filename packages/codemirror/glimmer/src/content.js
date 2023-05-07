@@ -1,12 +1,6 @@
 import { parseMixed } from '@lezer/common';
-import { parser as javascriptParser } from '@lezer/javascript';
 
-import { 
-  // Element, 
-  Expression, 
-  // ScriptText, StyleText, 
-  // TextareaText 
-} from './syntax.grammar.terms';
+// import { Element, Expression } from './syntax.grammar.terms';
 
 function getAttrs(element, input) {
   let attrs = Object.create(null);
@@ -37,42 +31,12 @@ function maybeNest(node, input, tags) {
   return null;
 }
 
-// const expressionParser = javascriptParser.configure({ top: 'SingleExpression' });
+// const expressionParser = javascriptParser.configure({
+//   top: 'SingleExpression',
+// });
 
 // tags: {
 //   tag: "script" | "style" | "textarea",
 //   attrs?: ({[attr: string]: string}) => boolean,
 //   parser: Parser
 // }[]
-
-export function configureNesting(tags) {
-  let script = [],
-    style = [],
-    textarea = [];
-
-  for (let tag of tags) {
-    let array =
-      tag.tag == 'script'
-        ? script
-        : tag.tag == 'style'
-        ? style
-        : tag.tag == 'textarea'
-        ? textarea
-        : null;
-
-    if (!array)
-      throw new RangeError('Only script, style, and textarea tags can host nested parsers');
-    array.push(tag);
-  }
-
-  return parseMixed((node, input) => {
-    let id = node.type.id;
-
-    // if (id === Expression) return { parser: expressionParser };
-    // if (id === ScriptText) return maybeNest(node, input, script);
-    // if (id === StyleText) return maybeNest(node, input, style);
-    // if (id === TextareaText) return maybeNest(node, input, textarea);
-
-    return null;
-  });
-}

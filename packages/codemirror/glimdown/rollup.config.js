@@ -1,2 +1,1 @@
-export { default as default } from '@glimdown/lezer-infra/rollup.config.js';
-
+export { default as default } from "@glimdown/lezer-infra/rollup.config.js";

@@ -1,12 +1,12 @@
-import { glimdown } from './glimdown';
+import { glimdown } from "./glimdown";
 
 const tree = fromMarkdown(doc, {
   extensions: [mdxjs()],
-  mdastExtensions: [mdxFromMarkdown]
-})
+  mdastExtensions: [mdxFromMarkdown],
+});
 
-console.log(tree)
+console.log(tree);
 
-const out = toMarkdown(tree, {extensions: [mdxToMarkdown]})
+const out = toMarkdown(tree, { extensions: [mdxToMarkdown] });
 
-console.log(out)
+console.log(out);

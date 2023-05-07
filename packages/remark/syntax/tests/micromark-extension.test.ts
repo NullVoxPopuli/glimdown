@@ -1,11 +1,11 @@
-import { stripIndent } from 'common-tags';
-import { micromark } from 'micromark';
-import { describe, expect, it } from 'vitest';
+import { stripIndent } from "common-tags";
+import { micromark } from "micromark";
+import { describe, expect, it } from "vitest";
 
 const s = stripIndent;
 
-describe('micromark-extension', () => {
-  it('works', () => {
+describe("micromark-extension", () => {
+  it("works", () => {
     let md = s`
       # Hello, world!
 

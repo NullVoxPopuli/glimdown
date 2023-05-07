@@ -1,4 +1,2 @@
 // @ts-check
-export function acornGlimmer() {
-
-}
+export function acornGlimmer() {}
