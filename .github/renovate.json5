@@ -36,7 +36,7 @@
         "prettier"
       ],
       "packagePatterns": [
-        "*/eslint*",
+        ".*/eslint.*",
         "eslint-plugin-.*",
         "eslint-config-.*",
         ".*typescript-eslint.*",
