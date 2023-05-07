@@ -13,6 +13,11 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  TURBO_API: 'http://127.0.0.1:9080'
+  TURBO_TOKEN: 'not-a-secret'
+  TURBO_TEAM: 'foo'
+
 ##############################################################
 
 jobs:
