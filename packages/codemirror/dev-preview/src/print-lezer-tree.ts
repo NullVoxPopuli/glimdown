@@ -1,9 +1,9 @@
 // From: https://gist.github.com/msteen/e4828fbf25d6efef73576fc43ac479d2/
 
-import { Text } from '@codemirror/state';
-import { TreeCursor } from '@lezer/common';
+import { Text } from "@codemirror/state";
+import { TreeCursor } from "@lezer/common";
 
-import type { Input, NodeType, SyntaxNode, Tree } from '@lezer/common';
+import type { Input, NodeType, SyntaxNode, Tree } from "@lezer/common";
 
 class StringInput implements Input {
   constructor(private readonly input: string) {}
@@ -23,7 +23,11 @@ class StringInput implements Input {
   }
 }
 
-export function sliceType(cursor: TreeCursor, input: Input, type: number): string | null {
+export function sliceType(
+  cursor: TreeCursor,
+  input: Input,
+  type: number
+): string | null {
   if (cursor.type.id === type) {
     const s = input.read(cursor.from, cursor.to);
 
@@ -43,9 +47,17 @@ export function isType(cursor: TreeCursor, type: number): boolean {
   return cond;
 }
 
-export type CursorNode = { type: NodeType; from: number; to: number; isLeaf: boolean };
+export type CursorNode = {
+  type: NodeType;
+  from: number;
+  to: number;
+  isLeaf: boolean;
+};
 
-function cursorNode({ type, from, to }: TreeCursor, isLeaf = false): CursorNode {
+function cursorNode(
+  { type, from, to }: TreeCursor,
+  isLeaf = false
+): CursorNode {
   return { type, from, to, isLeaf };
 }
 
@@ -80,7 +92,8 @@ export function traverseTree(
 
     if (node.from <= to && node.to >= from) {
       const enter =
-        !node.type.isAnonymous && (includeParents || (node.from >= from && node.to <= to));
+        !node.type.isAnonymous &&
+        (includeParents || (node.from >= from && node.to <= to));
 
       if (enter && beforeEnter) beforeEnter(cursor);
       node.isLeaf = !cursor.firstChild();
@@ -118,7 +131,7 @@ export function validatorTraversal(
   input: Input | string,
   { fullMatch = true }: { fullMatch?: boolean } = {}
 ) {
-  if (typeof input === 'string') input = new StringInput(input);
+  if (typeof input === "string") input = new StringInput(input);
 
   const state = {
     valid: true,
@@ -136,13 +149,19 @@ export function validatorTraversal(
         if (node.from > node.to || node.from < state.lastLeafTo) {
           state.valid = false;
         } else if (node.isLeaf) {
-          if (state.parentNodes.length && !isChildOf(node, state.parentNodes[0]))
+          if (
+            state.parentNodes.length &&
+            !isChildOf(node, state.parentNodes[0])
+          )
             state.valid = false;
           state.lastLeafTo = node.to;
         } else {
           if (state.parentNodes.length) {
             if (!isChildOf(node, state.parentNodes[0])) state.valid = false;
-          } else if (fullMatch && (node.from !== 0 || node.to !== input.length)) {
+          } else if (
+            fullMatch &&
+            (node.from !== 0 || node.to !== input.length)
+          ) {
             state.valid = false;
           }
         }
@@ -177,17 +196,22 @@ function colorize(value: any, color: number): string {
   return String(value);
 }
 
-type PrintTreeOptions = { from?: number; to?: number; start?: number; includeParents?: boolean };
+type PrintTreeOptions = {
+  from?: number;
+  to?: number;
+  start?: number;
+  includeParents?: boolean;
+};
 
 export function printTree(
   cursor: TreeCursor | Tree | SyntaxNode,
   input: Input | string,
   { from, to, start = 0, includeParents }: PrintTreeOptions = {}
 ): string {
-  const inp = typeof input === 'string' ? new StringInput(input) : input;
-  const text = Text.of(inp.read(0, inp.length).split('\n'));
+  const inp = typeof input === "string" ? new StringInput(input) : input;
+  const text = Text.of(inp.read(0, inp.length).split("\n"));
   const state = {
-    output: '',
+    output: "",
     prefixes: [] as string[],
     hasNextSibling: false,
   };
@@ -203,18 +227,18 @@ export function printTree(
     onEnter(node) {
       validator.traversal.onEnter(node);
 
-      const isTop = state.output === '';
+      const isTop = state.output === "";
       const hasPrefix = !isTop || node.from > 0;
 
       if (hasPrefix) {
-        state.output += (!isTop ? '\n' : '') + state.prefixes.join('');
+        state.output += (!isTop ? "\n" : "") + state.prefixes.join("");
 
         if (state.hasNextSibling) {
-          state.output += ' ├─ ';
-          state.prefixes.push(' │  ');
+          state.output += " ├─ ";
+          state.prefixes.push(" │  ");
         } else {
-          state.output += ' └─ ';
-          state.prefixes.push('    ');
+          state.output += " └─ ";
+          state.prefixes.push("    ");
         }
       }
 
@@ -224,17 +248,19 @@ export function printTree(
         (node.type.isError || !validator.state.valid
           ? colorize(node.type.name, Color.Red)
           : node.type.name) +
-        ' ' +
+        " " +
         (hasRange
-          ? '[' +
+          ? "[" +
             colorize(locAt(text, start + node.from), Color.Yellow) +
-            '..' +
+            ".." +
             colorize(locAt(text, start + node.to), Color.Yellow) +
-            ']'
+            "]"
           : colorize(locAt(text, start + node.from), Color.Yellow));
 
       if (hasRange && node.isLeaf) {
-        state.output += ': ' + colorize(JSON.stringify(inp.read(node.from, node.to)), Color.Green);
+        state.output +=
+          ": " +
+          colorize(JSON.stringify(inp.read(node.from, node.to)), Color.Green);
       }
     },
     onLeave(node) {
@@ -249,7 +275,7 @@ export function printTree(
 function locAt(text: Text, pos: number): string {
   const line = text.lineAt(pos);
 
-  return line.number + ':' + (pos - line.from);
+  return line.number + ":" + (pos - line.from);
 }
 
 export function logTree(

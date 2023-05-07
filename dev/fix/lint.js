@@ -2,7 +2,7 @@ import path from "node:path";
 
 import { packageJson, project } from "ember-apply";
 import fse from "fs-extra";
-import latestVersion from 'latest-version';
+import latestVersion from "latest-version";
 
 let root = await project.gitRoot();
 
@@ -23,7 +23,7 @@ async function versionFor(name) {
 async function lastestOfAll(dependencies) {
   let result = {};
 
-  let promises = dependencies.map(async dep => {
+  let promises = dependencies.map(async (dep) => {
     return [dep, await versionFor(dep)];
   });
 
