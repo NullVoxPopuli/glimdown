@@ -6,6 +6,10 @@ import { execaCommand } from "execa";
 const [, , command] = process.argv;
 // process.cwd() is whatever pnpm decides to do
 //
+// For now, we use INIT_CWD, because we want to use
+// whatever the User's CWD is, even if we are invoked via
+// pnpm -w exec, which is "workspace root"
+//
 // Other options:
 //  PNPM_SCRIPT_SRC_DIR
 //  OLDPWD
@@ -34,9 +38,9 @@ async function run() {
     case "js":
       return execaCommand(`pnpm eslint .`, { cwd });
     case "fix":
-      return execaCommand(`pnpm turbo lint:fix`);
+      return execaCommand(`pnpm turbo _:lint:fix`);
     default:
-      return execaCommand(`pnpm turbo lint`);
+      return execaCommand(`pnpm turbo _:lint`);
   }
 }
 

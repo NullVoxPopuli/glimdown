@@ -71,7 +71,7 @@ const syncAST = EditorView.updateListener.of((update) => {
 });
 
 // Text Input
-const mainView = new EditorView({
+export const mainView = new EditorView({
   state: EditorState.create({
     doc,
     extensions: [

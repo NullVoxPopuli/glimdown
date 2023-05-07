@@ -12,7 +12,6 @@ import { parseMixed } from '@lezer/common';
 import { parser as htmlParser } from '@lezer/html';
 
 import { parser } from './syntax.grammar';
-import { MoustacheExpression } from './syntax.grammar.terms';
 
 import type { Text } from '@codemirror/state';
 import type { SyntaxNode } from '@lezer/common';
@@ -35,15 +34,13 @@ export const glimmerLanguage = LRLanguage.define({
           return { parser };
       }
 
-      console.log(node.type.name);
-
       return { parser: htmlParser };
     }),
 
     props: [
       indentNodeProp.add({
         Element: (context) => {
-          let after = /^(\s*)(<\/)?/.exec(context.textAfter)!;
+          let after = /^(\s*)(<\/)?/.exec(context.textAfter);
 
           if (context.node.to <= context.pos + after[0].length) return context.continue();
 
@@ -74,7 +71,7 @@ export const glimmerLanguage = LRLanguage.define({
           }
 
           // not sure if this needed to be duplicated
-          let after = /^(\s*)(<\/)?/.exec(context.textAfter)!;
+          let after = /^(\s*)(<\/)?/.exec(context.textAfter);
 
           if (context.node.to <= context.pos + after[0].length) return context.continue();
 
@@ -90,7 +87,7 @@ export const glimmerLanguage = LRLanguage.define({
         },
 
         Document: (context) => {
-          if (context.pos + /\s*/.exec(context.textAfter)![0].length < context.node.to) {
+          if (context.pos + /\s*/.exec(context.textAfter)[0].length < context.node.to) {
             return context.continue();
           }
 
@@ -136,7 +133,7 @@ export const glimmerLanguage = LRLanguage.define({
 
         Element: (node) => {
           let first = node.firstChild;
-          let last = node.lastChild!;
+          let last = node.lastChild;
 
           if (!first || first.name != 'OpenTag') return null;
 
@@ -198,7 +195,7 @@ const autoCloseTags = EditorView.inputHandler.of((view, from, to, text) => {
       around.name === 'ComponentName' ||
       around.name === 'StartTag'
     ) {
-      around = around.parent!;
+      around = around.parent;
     }
 
     if (text === '>' && around.name === 'OpenTag') {
@@ -216,8 +213,8 @@ const autoCloseTags = EditorView.inputHandler.of((view, from, to, text) => {
         base = empty?.parent;
 
       if (
-        empty!.from == head - 1 &&
-        base!.lastChild?.name != 'CloseTag' &&
+        empty.from == head - 1 &&
+        base.lastChild?.name != 'CloseTag' &&
         (name = elementName(state.doc, base, head))
       ) {
         let hasRightBracket = view.state.doc.sliceString(head, head + 1) === '>';

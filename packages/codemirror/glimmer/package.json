@@ -46,7 +46,11 @@
     "lint:js": "pnpm -w exec lint js",
     "lint:js:fix": "pnpm -w exec lint js:fix",
     "build": "cm-buildhelper src/index.ts",
-    "lint": "pnpm -w exec lint"
+    "lint": "pnpm -w exec lint",
+    "_:lint:js": "pnpm -w exec lint js",
+    "_:lint:js:fix": "pnpm -w exec lint js:fix",
+    "_:lint:prettier:fix": "pnpm -w exec lint prettier:fix",
+    "_:lint:prettier": "pnpm -w exec lint prettier"
   },
   "volta": {
     "extends": "../../../package.json"

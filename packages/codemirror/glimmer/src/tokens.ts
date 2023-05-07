@@ -7,14 +7,8 @@ import {
   shortCommentContent as shortCommentToken,
   templateTagContent as templateTagToken,
 } from './syntax.grammar.terms';
-import * as all from './syntax.grammar.terms';
 
 import type { InputStream } from '@lezer/lr';
-
-const space = [
-  9, 10, 11, 12, 13, 32, 133, 160, 5760, 8192, 8193, 8194, 8195, 8196, 8197, 8198, 8199, 8200, 8201,
-  8202, 8232, 8233, 8239, 8287, 12288,
-];
 
 // Ascii values
 const parenOpen = 40;
@@ -23,7 +17,6 @@ const squareOpen = 91;
 const squareClose = 93;
 const curlyOpen = 123;
 const curlyClose = 125;
-const comma = 44;
 const colon = 58;
 const hash = 35;
 const at = 64;
@@ -43,6 +36,7 @@ const shortCommentEnd = [curlyClose, curlyClose];
 const longCommentEnd = [dash, dash, curlyClose, curlyClose];
 const htmlCommentEnd = [dash, dash, greaterThan];
 
+// Is there a way to make this a build time (rather than eval-time?) operation?
 const closingTemplateTag = '</template>'.split('').map((char) => char.charCodeAt(0));
 
 export function matchForComment(commentEndPattern, commentToken, input) {

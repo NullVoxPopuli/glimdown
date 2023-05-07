@@ -1,11 +1,6 @@
 import { ExternalTokenizer } from '@lezer/lr';
 
 import { templateTagContent as templateTagToken } from './syntax.grammar.terms';
-import * as all from './syntax.grammar.terms';
-
-console.log('tokens', all);
-
-// import { matchForComment } from '../../src/tokens';
 
 export function matchForComment(commentEndPattern, commentToken, input) {
   for (let found = 0, i = 0; ; i++) {
