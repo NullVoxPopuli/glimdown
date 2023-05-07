@@ -6,14 +6,14 @@
     "./print-tree": "./src/print-lezer-tree.ts"
   },
   "devDependencies": {
+    "@babel/core": "^7.21.8",
     "@babel/eslint-parser": "^7.21.8",
     "@nullvoxpopuli/eslint-configs": "^3.1.3",
     "@typescript-eslint/eslint-plugin": "^5.59.2",
     "@typescript-eslint/parser": "^5.59.2",
     "eslint": "^8.40.0",
     "prettier": "^2.8.8",
-    "typescript": "^5.0.4",
-    "@babel/core": "^7.21.8"
+    "typescript": "^5.0.4"
   },
   "scripts": {
     "lint:prettier:fix": "pnpm -w exec lint prettier:fix",
@@ -22,5 +22,9 @@
     "lint": "pnpm -w exec lint",
     "lint:js": "pnpm -w exec lint js",
     "lint:js:fix": "pnpm -w exec lint js:fix"
+  },
+  "dependencies": {
+    "@codemirror/state": "^6.2.0",
+    "@lezer/common": "^1.0.2"
   }
 }

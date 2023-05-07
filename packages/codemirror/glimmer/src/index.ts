@@ -1,6 +1,4 @@
-import { css, cssLanguage } from '@codemirror/lang-css';
-import { html, htmlCompletionSource, htmlLanguage } from '@codemirror/lang-html';
-import { javascript } from '@codemirror/lang-javascript';
+import { html, htmlCompletionSource } from '@codemirror/lang-html';
 import {
   foldNodeProp,
   indentNodeProp,

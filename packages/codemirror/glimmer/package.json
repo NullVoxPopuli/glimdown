@@ -3,13 +3,13 @@
   "version": "0.0.0-alpha.0",
   "author": "NullVoxPopuli",
   "license": "MIT",
-  "main": "dist/index.cjs",
   "type": "module",
   "exports": {
-    "import": "./dist/index.es.js",
+    "import": "./dist/index.js",
     "require": "./dist/index.cjs"
   },
-  "module": "dist/index.es.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
@@ -17,6 +17,8 @@
     "path": "packages/lezer/glimmer"
   },
   "devDependencies": {
+    "@babel/core": "^7.21.8",
+    "@babel/eslint-parser": "^7.21.8",
     "@codemirror/buildhelper": "^0.1.16",
     "@lezer/generator": "^1.2.3",
     "@nullvoxpopuli/eslint-configs": "^3.1.3",
@@ -26,11 +28,10 @@
     "concurrently": "^8.0.1",
     "eslint": "^8.40.0",
     "prettier": "^2.8.8",
-    "typescript": "^5.0.4",
-    "@babel/eslint-parser": "^7.21.8",
-    "@babel/core": "^7.21.8"
+    "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@codemirror/lang-html": "^6.4.3",
     "@lezer/common": "^1.0.2",
     "@lezer/highlight": "^1.1.4",
     "@lezer/html": "^1.3.4",

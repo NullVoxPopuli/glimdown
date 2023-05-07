@@ -33,7 +33,7 @@
     "@babel/core": "^7.21.8"
   },
   "dependencies": {
-    "lezer-glimmer": "workspace:^",
+    "lezer-glimmer": "workspace:*",
     "@codemirror/lang-css": "^6.2.0",
     "@codemirror/lang-html": "^6.4.3",
     "@codemirror/lang-javascript": "^6.1.7",

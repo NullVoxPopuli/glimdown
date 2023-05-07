@@ -101,6 +101,13 @@ importers:
         version: 5.0.4
 
   packages/codemirror/dev-preview:
+    dependencies:
+      '@codemirror/state':
+        specifier: ^6.2.0
+        version: 6.2.0
+      '@lezer/common':
+        specifier: ^1.0.2
+        version: 1.0.2
     devDependencies:
       '@babel/core':
         specifier: ^7.21.8
@@ -178,6 +185,9 @@ importers:
 
   packages/codemirror/glimmer:
     dependencies:
+      '@codemirror/lang-html':
+        specifier: ^6.4.3
+        version: 6.4.3
       '@lezer/common':
         specifier: ^1.0.2
         version: 1.0.2
@@ -252,7 +262,7 @@ importers:
         specifier: ^1.0.0
         version: 1.3.4
       lezer-glimmer:
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../glimmer
     devDependencies:
       '@babel/core':
