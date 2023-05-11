@@ -11,9 +11,17 @@
 //    This helps reduce the possibility of accidental
 //    cycles in script dependencies and invocation.
 //
-//    One way to think about the _: scripts is the 
-//    "endpoint" -- more turbo commands should not
-//    be spawned by these scripts.
+//    One way to think about this is to ask a question:
+//      
+//        Is the script and endpoint command? 
+//          as in, it's not a meta-script or script-running script?
+//        
+//        If the script is an endpoint command, 
+//          the _: prefix is not needed.
+//  
+//        Otherwise, the _: is needed, because the local / 
+//        package-specific script would be in conflict.
+//        (We want to avoid having turbo call scripts that call turbo)
 //
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
@@ -57,34 +65,35 @@
     /////////////////////////////////////////////////
     "_:lint": {
       "outputs": [],
-      "dependsOn": ["_:lint:js", "_:lint:hbs", "_:lint:prettier", "_:lint:types"]
+      "dependsOn": ["lint:js", "lint:hbs", "lint:prettier", "lint:types"]
     },
-    "_:lint:js": {
+    "lint:js": {
       "outputs": []
     },
-    "_:lint:hbs": {
+    "lint:hbs": {
       "outputs": []
     },
-    "_:lint:prettier": {
+    "lint:prettier": {
       "outputs": []
     },
-    "_:lint:types": {
+    // Type-checking in this repo operates on outputs of other packages.
+    // We can't trust development types to be correct across all projects, 
+    // as all projects must be able to be used in isolation (where appropriate)
+    "lint:types": {
       "outputs": [],
       "dependsOn": ["^build"]
     },
     "_:lint:fix": {
       "outputs": [],
-      "dependsOn": ["_:lint:js:fix", "_:lint:hbs:fix"]
+      "cache": false,
+      "dependsOn": ["lint:js:fix", "lint:hbs:fix"]
     },
-    "_:lint:js:fix": {
+    "lint:js:fix": {
       "outputs": [],
-      "dependsOn": ["_:lint:prettier:fix"]
+      "cache": false,
+      "dependsOn": ["lint:prettier:fix"] 
     },
-    "_:lint:hbs:fix": {
-      "outputs": []
-    },
-    "_:lint:prettier:fix": {
-      "outputs": []
-    }
+    "lint:hbs:fix": { "outputs": [], "cache": false },
+    "lint:prettier:fix": { "outputs": [], "cache": false }
   }
 }
