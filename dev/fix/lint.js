@@ -55,14 +55,26 @@ for await (let workspace of await project.getWorkspaces()) {
     workspace
   );
 
+  await packageJson.modify((json) => {
+    if (!json.scripts) return;
+
+    delete json.scripts["_:lint:types"];
+    delete json.scripts["_:lint:js"];
+    delete json.scripts["_:lint:js:fix"];
+    delete json.scripts["_:lint:prettier"];
+    delete json.scripts["_:lint:prettier:fix"];
+    delete json.scripts["_:lint:hbs"];
+    delete json.scripts["_:lint:hbs:fix"];
+  }, workspace);
+
   await packageJson.addScripts(
     {
       lint: "pnpm -w exec lint",
       "lint:fix": "pnpm -w exec lint fix",
-      "_:lint:js": "pnpm -w exec lint js",
-      "_:lint:js:fix": "pnpm -w exec lint js:fix",
-      "_:lint:prettier:fix": "pnpm -w exec lint prettier:fix",
-      "_:lint:prettier": "pnpm -w exec lint prettier",
+      "lint:js": "pnpm -w exec lint js",
+      "lint:js:fix": "pnpm -w exec lint js:fix",
+      "lint:prettier:fix": "pnpm -w exec lint prettier:fix",
+      "lint:prettier": "pnpm -w exec lint prettier",
     },
     workspace
   );
