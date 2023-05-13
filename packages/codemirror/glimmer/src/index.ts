@@ -33,9 +33,9 @@ export const glimmerLanguage = LRLanguage.define({
         Element: (context) => {
           let after = /^(\s*)(<\/)?/.exec(context.textAfter);
 
-          if (context.node.to <= context.pos + after[0].length) return context.continue();
+          if (context.node.to <= context.pos + (after?.[0].length || 0)) return context.continue();
 
-          return context.lineIndent(context.node.from) + (after[2] ? 0 : context.unit);
+          return context.lineIndent(context.node.from) + (after?.[2] ? 0 : context.unit);
         },
 
         Block: (context) => {
@@ -64,9 +64,9 @@ export const glimmerLanguage = LRLanguage.define({
           // not sure if this needed to be duplicated
           let after = /^(\s*)(<\/)?/.exec(context.textAfter);
 
-          if (context.node.to <= context.pos + after[0].length) return context.continue();
+          if (context.node.to <= context.pos + (after?.[0].length || 0)) return context.continue();
 
-          return context.lineIndent(context.node.from) + (after[2] ? 0 : context.unit);
+          return context.lineIndent(context.node.from) + (after?.[2] ? 0 : context.unit);
         },
 
         'BlockOpen BlockClose BlockInline': (context) => {
@@ -78,7 +78,7 @@ export const glimmerLanguage = LRLanguage.define({
         },
 
         Document: (context) => {
-          if (context.pos + /\s*/.exec(context.textAfter)[0].length < context.node.to) {
+          if (context.pos + (/\s*/.exec(context.textAfter)?.[0].length||0) < context.node.to) {
             return context.continue();
           }
 
@@ -93,7 +93,7 @@ export const glimmerLanguage = LRLanguage.define({
           }
 
           if (
-            endElt &&
+            endElt?.lastChild &&
             !(
               (close = endElt.lastChild) &&
               (close.name === 'CloseTag' || close.name === 'SelfClosingTag')
@@ -130,7 +130,7 @@ export const glimmerLanguage = LRLanguage.define({
 
           return {
             from: first.to,
-            to: last.name === 'CloseTag' ? last.from : node.to,
+            to: last?.name === 'CloseTag' ? last.from : node.to,
           };
         },
       }),

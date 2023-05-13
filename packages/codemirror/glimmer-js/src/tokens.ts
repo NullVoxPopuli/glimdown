@@ -2,7 +2,7 @@ import { ExternalTokenizer } from '@lezer/lr';
 
 import { templateTagContent as templateTagToken } from './syntax.grammar.terms';
 
-export function matchForComment(commentEndPattern, commentToken, input) {
+export function matchForComment(commentEndPattern: number[], commentToken: number, input: any) {
   for (let found = 0, i = 0; ; i++) {
     if (input.next < 0) {
       if (i) input.acceptToken(commentToken);
