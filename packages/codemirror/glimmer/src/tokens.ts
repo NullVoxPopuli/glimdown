@@ -39,7 +39,7 @@ const htmlCommentEnd = [dash, dash, greaterThan];
 // Is there a way to make this a build time (rather than eval-time?) operation?
 const closingTemplateTag = '</template>'.split('').map((char) => char.charCodeAt(0));
 
-export function matchForComment(commentEndPattern, commentToken, input) {
+export function matchForComment(commentEndPattern: number[], commentToken: number, input: any) {
   for (let found = 0, i = 0; ; i++) {
     if (input.next < 0) {
       if (i) input.acceptToken(commentToken);
