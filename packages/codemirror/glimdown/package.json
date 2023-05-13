@@ -29,7 +29,7 @@
     "@lezer/lr": "^1.3.4"
   },
   "scripts": {
-    "build": "lezer-generator src/glimdown.grammar -o src/parser && rollup -c",
+    "____:build": "lezer-generator src/glimdown.grammar -o src/parser && rollup -c",
     "build-debug": "lezer-generator src/glimdown.grammar --names -o src/parser && rollup -c",
     "lint": "pnpm -w exec lint",
     "lint:fix": "pnpm -w exec lint fix",
