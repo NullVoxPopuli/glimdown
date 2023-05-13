@@ -78,7 +78,7 @@ export const glimmerLanguage = LRLanguage.define({
         },
 
         Document: (context) => {
-          if (context.pos + (/\s*/.exec(context.textAfter)?.[0].length||0) < context.node.to) {
+          if (context.pos + (/\s*/.exec(context.textAfter)?.[0].length || 0) < context.node.to) {
             return context.continue();
           }
 
