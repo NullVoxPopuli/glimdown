@@ -1,5 +1,13 @@
 # codemirror-lang-glimmer-js
 
+## 0.0.0-beta.2
+
+### Patch Changes
+
+- 40fd2df: Shipped built assets in the npm package
+- Updated dependencies [40fd2df]
+  - codemirror-lang-glimmer@0.0.0-beta.2
+
 ## 0.0.0-beta.1
 
 ### Minor Changes
