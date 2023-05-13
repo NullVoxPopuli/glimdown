@@ -5,8 +5,10 @@ packages:
   - "packages/codemirror/*/dev"
   # Tests, obvs
   - "packages/codemirror/*/tests"
+  - "packages/glimdown/*/tests"
   # Potentially publishables
   - "packages/*"
+  - "packages/glimdown/*"
   - "packages/remark/*"
   - "packages/lezer/*"
   - "packages/codemirror/*"
