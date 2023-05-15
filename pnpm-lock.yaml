@@ -485,10 +485,10 @@ importers:
         version: 5.59.5(eslint@8.40.0)(typescript@5.0.4)
       ember-repl:
         specifier: ^3.0.0-beta.0
-        version: 3.0.0-beta.0(@glimmer/compiler@0.84.3)(@glimmer/component@1.1.2)(@glimmer/syntax@0.84.3)(ember-source@4.12.0)
+        version: 3.0.0-beta.0(@glimmer/compiler@0.84.3)(@glimmer/component@1.1.2)(@glimmer/syntax@0.84.3)(ember-source@5.0.0)
       ember-source:
-        specifier: ^4.12.0
-        version: 4.12.0(@babel/core@7.21.8)(@glimmer/component@1.1.2)
+        specifier: ^5.0.0
+        version: 5.0.0(@babel/core@7.21.8)(@glimmer/component@1.1.2)
       eslint:
         specifier: ^8.40.0
         version: 8.40.0
@@ -5339,7 +5339,7 @@ packages:
       - supports-color
     dev: true
 
-  /ember-repl@3.0.0-beta.0(@glimmer/compiler@0.84.3)(@glimmer/component@1.1.2)(@glimmer/syntax@0.84.3)(ember-source@4.12.0):
+  /ember-repl@3.0.0-beta.0(@glimmer/compiler@0.84.3)(@glimmer/component@1.1.2)(@glimmer/syntax@0.84.3)(ember-source@5.0.0):
     resolution: {integrity: sha512-+o60X2+IyDXfsC6Bxaxy8RS5XWyCj3fwD0zGN8GXwGOSYtgrPP9tIaW110mUvIstzjrEFSEVAmrMW6fUgO2k0Q==}
     peerDependencies:
       '@glimmer/compiler': ^0.84.3
@@ -5359,7 +5359,7 @@ packages:
       broccoli-file-creator: 2.1.1
       change-case: 4.1.2
       common-tags: 1.8.2
-      ember-source: 4.12.0(@babel/core@7.21.8)(@glimmer/component@1.1.2)
+      ember-source: 5.0.0(@babel/core@7.21.8)(@glimmer/component@1.1.2)
       line-column: 1.0.2
       magic-string: 0.30.0
       parse-static-imports: 1.1.0
@@ -5383,9 +5383,9 @@ packages:
       - supports-color
     dev: true
 
-  /ember-source@4.12.0(@babel/core@7.21.8)(@glimmer/component@1.1.2):
-    resolution: {integrity: sha512-h0lV902A4Mny2eiqXPy15uXXoCc7BnUegE4axLAy4IoxEkJ1o5h0aLJFiB4Tzb1htx8vgHjJz//Y5Jig7NSDTw==}
-    engines: {node: '>= 14.*'}
+  /ember-source@5.0.0(@babel/core@7.21.8)(@glimmer/component@1.1.2):
+    resolution: {integrity: sha512-zy0iU3Mf9HZXVQacqWLAfHCbQge8Ysi2EpU6XTgrdf2PX5ILdWTbSPklxuTlkGV7NrG5PkIfGW8hfimwY6I/tw==}
+    engines: {node: '>= 16.*'}
     peerDependencies:
       '@glimmer/component': ^1.1.2
     dependencies:
