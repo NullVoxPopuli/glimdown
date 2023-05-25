@@ -219,8 +219,8 @@ importers:
         specifier: ^7.21.8
         version: 7.21.8(@babel/core@7.21.8)(eslint@8.40.0)
       '@codemirror/buildhelper':
-        specifier: ^0.1.16
-        version: 0.1.16
+        specifier: ^1.0.0
+        version: 1.0.0
       '@codemirror/language':
         specifier: ^6.6.0
         version: 6.6.0
@@ -295,8 +295,8 @@ importers:
         specifier: ^7.21.8
         version: 7.21.8(@babel/core@7.21.8)(eslint@8.40.0)
       '@codemirror/buildhelper':
-        specifier: ^0.1.16
-        version: 0.1.16
+        specifier: ^1.0.0
+        version: 1.0.0
       '@glimdown/lezer-infra':
         specifier: workspace:*
         version: link:../-infra
@@ -2038,22 +2038,13 @@ packages:
       '@codemirror/view': 6.11.0
       '@lezer/common': 1.0.2
 
-  /@codemirror/buildhelper@0.1.16:
-    resolution: {integrity: sha512-b88pPVoLoBp3DHe+CK5p/1t/WFGYRGxn69d9Efp/cEP3uF91hXTIKOimaL3IyVhm9q6ILjKzn8q8MFUUy7GvwA==}
+  /@codemirror/buildhelper@1.0.0:
+    resolution: {integrity: sha512-tjVnizCUsDJHWZFNjQWBl4DAZrfLGSUmFEvjMkfom4eK5zyByiCITfrNHZOYZgi4xMWk2qJHS6LBWCq0IBWtmQ==}
     hasBin: true
     dependencies:
       '@lezer/generator': 1.2.3
-      '@types/mocha': 9.1.1
-      acorn: 8.8.2
-      acorn-walk: 8.2.0
-      esmoduleserve: 0.2.0
-      ist: 1.1.7
-      mocha: 10.2.0
-      rollup: 2.79.1
-      rollup-plugin-dts: 3.0.2(rollup@2.79.1)(typescript@4.9.5)
-      selenium-webdriver: 4.9.0
-      serve-static: 1.15.0
-      typescript: 4.9.5
+      '@marijn/buildtool': 0.1.4
+      '@marijn/testtool': 0.1.1
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -2690,6 +2681,31 @@ packages:
       fs-extra: 8.1.0
       globby: 11.1.0
       read-yaml-file: 1.1.0
+    dev: true
+
+  /@marijn/buildtool@0.1.4:
+    resolution: {integrity: sha512-XHH+ZTlxd34snfIPwonUM0V1S4p2RBfDvG1sIDWWQyU7MQzRwLCHrPEWIrck6f+6iryOtYp/9p2IKJFJNkYZTw==}
+    dependencies:
+      '@types/mocha': 9.1.1
+      acorn: 8.8.2
+      acorn-walk: 8.2.0
+      rollup: 2.79.1
+      rollup-plugin-dts: 3.0.2(rollup@2.79.1)(typescript@4.9.5)
+      typescript: 4.9.5
+    dev: true
+
+  /@marijn/testtool@0.1.1:
+    resolution: {integrity: sha512-mc8Tq46yGA5C4Nk0utPNy1iJmZGkezHkC9u0m8y46QMTwg/ImI76UCE3gnOa1NxV+yddrwV4JAK/9n//1JmtfA==}
+    dependencies:
+      esmoduleserve: 0.2.0
+      ist: 1.1.7
+      mocha: 10.2.0
+      selenium-webdriver: 4.9.0
+      serve-static: 1.15.0
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
     dev: true
 
   /@mdn/browser-compat-data@5.2.57:

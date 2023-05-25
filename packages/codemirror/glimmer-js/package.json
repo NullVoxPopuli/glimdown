@@ -18,7 +18,7 @@
   "devDependencies": {
     "@babel/core": "^7.21.8",
     "@babel/eslint-parser": "^7.21.8",
-    "@codemirror/buildhelper": "^0.1.16",
+    "@codemirror/buildhelper": "^1.0.0",
     "@glimdown/lezer-infra": "workspace:*",
     "@lezer/common": "^1.0.2",
     "@lezer/generator": "^1.0.0",
