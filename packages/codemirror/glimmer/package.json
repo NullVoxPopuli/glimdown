@@ -19,7 +19,7 @@
   "devDependencies": {
     "@babel/core": "^7.21.8",
     "@babel/eslint-parser": "^7.21.8",
-    "@codemirror/buildhelper": "^0.1.16",
+    "@codemirror/buildhelper": "^1.0.0",
     "@codemirror/language": "^6.6.0",
     "@lezer/generator": "^1.2.3",
     "@nullvoxpopuli/eslint-configs": "^3.1.3",
