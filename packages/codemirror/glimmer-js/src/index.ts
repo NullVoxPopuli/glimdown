@@ -8,7 +8,7 @@ import { parser as metaParser } from './syntax.grammar';
 export { metaParser };
 
 export function gjs() {
-  return new LanguageSupport(gjsLanguage, [javascript().support]);
+  return new LanguageSupport(gjsLanguage, []);
 }
 
 export const gjsLanguage = LRLanguage.define({
