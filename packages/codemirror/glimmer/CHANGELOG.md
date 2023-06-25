@@ -1,5 +1,11 @@
 # codemirror-lang-glimmer
 
+## 0.0.0-beta.3
+
+### Patch Changes
+
+- 20dab8a: Initial development pre-release
+
 ## 0.0.0-beta.2
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # codemirror-lang-glimmer-js
 
+## 0.0.0-beta.3
+
+### Patch Changes
+
+- 20dab8a: Initial development pre-release
+- Updated dependencies [20dab8a]
+  - codemirror-lang-glimmer@0.0.0-beta.3
+
 ## 0.0.0-beta.2
 
 ### Patch Changes
