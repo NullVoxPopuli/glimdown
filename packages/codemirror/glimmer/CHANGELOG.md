@@ -1,5 +1,12 @@
 # codemirror-lang-glimmer
 
+## 0.0.0-beta.4
+
+### Patch Changes
+
+- 77ad072: Add and consume glimdown package, split gjs into gjs and gts
+- 0071216: Dependency updates
+
 ## 0.0.0-beta.3
 
 ### Patch Changes
