@@ -1,4 +1,4 @@
-import { javascript, javascriptLanguage } from '@codemirror/lang-javascript';
+import { /* javascript, */ javascriptLanguage } from '@codemirror/lang-javascript';
 import { LanguageSupport, LRLanguage } from '@codemirror/language';
 import { parseMixed } from '@lezer/common';
 import { glimmerParser } from 'codemirror-lang-glimmer';
