@@ -1,9 +1,8 @@
 {
-  "name": "@glimdown/codemirror-dev-preview",
+  "name": "@glimdown/glimmer-tests",
   "private": true,
-  "version": "0.0.0",
-  "exports": {
-    "./print-tree": "./src/print-lezer-tree.ts"
+  "volta": {
+    "extends": "../../../../package.json"
   },
   "devDependencies": {
     "@babel/core": "^7.22.5",
@@ -22,12 +21,5 @@
     "lint:js:fix": "pnpm -w exec lint js:fix",
     "lint:prettier:fix": "pnpm -w exec lint prettier:fix",
     "lint:prettier": "pnpm -w exec lint prettier"
-  },
-  "dependencies": {
-    "@codemirror/state": "^6.2.1",
-    "@lezer/common": "^1.0.3"
-  },
-  "volta": {
-    "extends": "../../../package.json"
   }
 }
