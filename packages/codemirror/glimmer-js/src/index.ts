@@ -1,4 +1,4 @@
-import { /* javascript, */ javascriptLanguage } from '@codemirror/lang-javascript';
+import { javascriptLanguage, typescriptLanguage } from '@codemirror/lang-javascript';
 import { LanguageSupport, LRLanguage } from '@codemirror/language';
 import { parseMixed } from '@lezer/common';
 import { glimmerParser } from 'codemirror-lang-glimmer';
@@ -11,6 +11,10 @@ export function gjs() {
   return new LanguageSupport(gjsLanguage, []);
 }
 
+export function gts() {
+  return new LanguageSupport(gtsLanguage, []);
+}
+
 export const gjsLanguage = LRLanguage.define({
   parser: metaParser.configure({
     wrap: parseMixed((node) => {
@@ -18,6 +22,17 @@ export const gjsLanguage = LRLanguage.define({
       if (node.type.name === 'GlimmerTemplateTag') return { parser: glimmerParser };
 
       return { parser: javascriptLanguage.parser };
+    }),
+  }),
+});
+
+export const gtsLanguage = LRLanguage.define({
+  parser: metaParser.configure({
+    wrap: parseMixed((node) => {
+      if (node.type.name === 'Document') return null;
+      if (node.type.name === 'GlimmerTemplateTag') return { parser: glimmerParser };
+
+      return { parser: typescriptLanguage.parser };
     }),
   }),
 });
