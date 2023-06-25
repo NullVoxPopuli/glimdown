@@ -124,6 +124,7 @@ export function glimdown() {
         extensions: ['gjs'],
         async load() {
           const { gjs } = await import('codemirror-lang-glimmer-js');
+
           return gjs();
         },
       }),
@@ -133,6 +134,7 @@ export function glimdown() {
         extensions: ['gts'],
         async load() {
           const { gts } = await import('codemirror-lang-glimmer-js');
+
           return gts();
         },
       }),
