@@ -109,22 +109,6 @@ export function glimdown() {
     codeLanguages: [
       ...languages,
       LanguageDescription.of({
-        name: 'glimmer-js',
-        alias: [
-          'gjs',
-          'gts',
-          'glimmer-js',
-          'glimmer-ts',
-          'javascript.glimmer',
-          'typescript.glimmer',
-        ],
-        extensions: ['gjs', 'gts'],
-        async load() {
-          // const { gjs } = await import('codemirror-lang-glimmer-js');
-          // return gjs();
-        },
-      }),
-      LanguageDescription.of({
         name: 'glimmer',
         alias: ['hbs', 'glimmer', 'ember', 'handlebars'],
         extensions: ['hbs'],
@@ -132,6 +116,24 @@ export function glimdown() {
           const { glimmer } = await import('codemirror-lang-glimmer');
 
           return glimmer();
+        },
+      }),
+      LanguageDescription.of({
+        name: 'glimmer-js',
+        alias: ['gjs', 'glimmer-js', 'javascript.glimmer'],
+        extensions: ['gjs'],
+        async load() {
+          const { gjs } = await import('codemirror-lang-glimmer-js');
+          return gjs();
+        },
+      }),
+      LanguageDescription.of({
+        name: 'glimmer-ts',
+        alias: ['gts', 'glimmer-ts', 'typescript.glimmer'],
+        extensions: ['gts'],
+        async load() {
+          const { gts } = await import('codemirror-lang-glimmer-js');
+          return gts();
         },
       }),
     ],

@@ -1,5 +1,5 @@
 {
-  "name": "@glimdown/glimmer-tests",
+  "name": "@glimdown/glimdown-tests",
   "private": true,
   "volta": {
     "extends": "../../../../package.json"

@@ -5,8 +5,7 @@ import { basicSetup } from 'codemirror';
 
 import { glimdown } from '../dist/';
 
-const testDoc = `
-# Title 
+const testDoc = `# Title 
 
 {{array 1 2}}
 
