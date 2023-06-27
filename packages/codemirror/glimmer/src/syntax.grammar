@@ -7,8 +7,6 @@ entity[@isGroup=Entity] {
   EachBlock |
   EachInBlock |
   RawHTMLBlock |
-  DebugBlock |
-  ConstBlock |
   Interpolation |
   UnknownBlock |
   Text |
@@ -16,8 +14,8 @@ entity[@isGroup=Entity] {
   CharacterReference |
   InvalidEntity |
   Element |
-  MoustacheComment |
   LongMoustacheComment |
+  MoustacheComment |
   Comment |
   ProcessingInst |
   IncompleteCloseTag |
@@ -119,7 +117,7 @@ LongMoustacheComment { longMoustacheCommentStart longMoustacheCommentContent* lo
   }
 
   DirectlyInterpolatedAttribute {
-    "{" (DirectlyInterpolatedAttributeValue { identifier })? "}"
+    "{{" (DirectlyInterpolatedAttributeValue { identifier })? "}}"
   }
 
   Splattributes {
@@ -204,15 +202,7 @@ LongMoustacheComment { longMoustacheCommentStart longMoustacheCommentContent* lo
   }
 
   RawHTMLBlock[group=BlockInline] {
-    "{" pfx<"@"> blk<"html"> LongExpression "}"
-  }
-
-  DebugBlock[group=BlockInline] {
-    "{" pfx<"@"> blk<"debug"> Variable ("," Variable)* "}"
-  }
-
-  ConstBlock[group=BlockInline] {
-    "{" pfx<"@"> blk<"const"> LongExpression "}"
+    "{{{" LongExpression "}}}"
   }
 
   UnknownBlock[group=BlockInline] {

@@ -50,6 +50,12 @@ const testDoc = `
 
     Hello {{this.name}}!
 
+  {{log this.name}}
+
+  {{debugger}}
+
+  {{{purify @dangerous}}}
+
   {{! inline simple }}
   {{!-- inline long }}
 
