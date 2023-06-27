@@ -240,7 +240,7 @@ MoustacheComment { moustacheCommentStart moustacheCommentContent* moustacheComme
   }
   
   Interpolation {
-    "{{" SExpression "}}"
+    "{{" LongExpression "}}"
   }
 }
 
