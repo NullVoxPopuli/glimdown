@@ -77,9 +77,11 @@ export const svelteLanguage = LRLanguage.define({
 
             if (
               (name === 'IfBlock' && text.startsWith('{/if')) ||
+              (name === 'UnlessBlock' && text.startsWith('{/unless')) ||
+              (name === 'InElementBlock' && text.startsWith('{/in-element')) ||
               (name === 'EachBlock' && text.startsWith('{/each')) ||
-              (name === 'AwaitBlock' && text.startsWith('{/await')) ||
-              (name === 'KeyBlock' && text.startsWith('{/key'))
+              (name === 'EachInBlock' && text.startsWith('{/each-in')) ||
+              (name === 'LetBlock' && text.startsWith('{/let'))
             ) {
               return context.lineIndent(context.node.from);
             }
@@ -87,8 +89,14 @@ export const svelteLanguage = LRLanguage.define({
             return null;
           }
 
-          if (node.name === 'IfBlock' || node.name === 'EachBlock') {
-            if (text.startsWith('{:else')) return context.lineIndent(node.from);
+          if (
+            node.name === 'IfBlock' ||
+            node.name === 'EachBlock' ||
+            node.name === 'EachInBlock' ||
+            node.name === 'UnlessBlock'
+          ) {
+            if (text.startsWith('{{:else')) return context.lineIndent(node.from);
+            if (text.startsWith('{{else')) return context.lineIndent(node.from);
           } else if (node.name === 'AwaitBlock') {
             if (text.startsWith('{:then')) return context.lineIndent(node.from);
             if (text.startsWith('{:catch')) return context.lineIndent(node.from);
@@ -212,7 +220,6 @@ const autoCloseTags = EditorView.inputHandler.of((view, from, to, text) => {
     if (
       around.name === 'TagName' ||
       around.name === 'ComponentName' ||
-      around.name === 'SvelteElementName' ||
       around.name === 'StartTag'
     ) {
       around = around.parent!;
