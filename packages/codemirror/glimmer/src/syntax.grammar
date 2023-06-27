@@ -6,6 +6,7 @@ entity[@isGroup=Entity] {
   LetBlock |
   EachBlock |
   EachInBlock |
+  InElementBlock |
   RawHTMLBlock |
   Interpolation |
   UnknownBlock |
@@ -43,6 +44,10 @@ EachInBlock[group=Block] {
   EachInBlockOpen (ElseBlock | entity)* EachInBlockClose
 }
 
+InElementBlock[group=Block] {
+  InElementBlockOpen (entity)* InElementBlockClose
+}
+
 Element {
   OpenScriptTag ScriptText (CloseScriptTag | missingCloseTag) |
   OpenStyleTag StyleText (CloseStyleTag | missingCloseTag) |
@@ -62,13 +67,14 @@ LongMoustacheComment { longMoustacheCommentStart longMoustacheCommentContent* lo
 MoustacheComment { moustacheCommentStart moustacheCommentContent* moustacheCommentEnd }
 
 @skip { space } {
+  CallExpression { "(" ~Function SExpression? (identifier Is SExpression)? ")"  }
 
   SExpression { 
-      // CallExpression
+      CallExpression
       // | identifier
       // | Is 
       // | Pipe
-      Argument
+      | Argument
       //| String
       // | keywords
   }
@@ -160,6 +166,14 @@ MoustacheComment { moustacheCommentStart moustacheCommentContent* moustacheComme
   LetBlockClose[group=BlockClose,openedBy=LetBlockOpen] {
     "{{" pfx<"/"> blk<"let"> "}}"
   }
+
+  InElementBlockOpen[group=BlockOpen,closedBy=InElementBlockClose] {
+    "{{" pfx<"#"> blk<"in-element"> LongExpression "}}"
+  }
+  
+  InElementBlockClose[group=BlockClose,openedBy=InElementBlockOpen] {
+    "{{" pfx<"/"> blk<"in-element"> "}}"
+  }
   
   IfBlockOpen[group=BlockOpen,closedBy=IfBlockClose] {
     "{{" pfx<"#"> blk<"if"> LongExpression "}}"
@@ -226,7 +240,7 @@ MoustacheComment { moustacheCommentStart moustacheCommentContent* moustacheComme
   }
   
   Interpolation {
-    "{{" (LongExpression | SExpression) "}}"
+    "{{" SExpression "}}"
   }
 }
 
