@@ -58,8 +58,8 @@ StyleText[group="TextContent Entity"] { styleText* }
 TextareaText[group="TextContent Entity"] { textareaText* }
 
 Comment { commentStart commentContent* commentEnd }
-MoustacheComment { moustacheCommentStart moustacheCommentContent* moustacheCommentEnd }
 LongMoustacheComment { longMoustacheCommentStart longMoustacheCommentContent* longMoustacheCommentEnd }
+MoustacheComment { moustacheCommentStart moustacheCommentContent* moustacheCommentEnd }
 
 @skip { space } {
   OpenTag[closedBy=CloseTag] {
@@ -359,10 +359,10 @@ blk<type> { @specialize[@name=BlockType]<BlockType, type> }
   commentStart { "<!--" }
   commentEnd { "-->" }
 
-  moustacheCommentStart { "{{!" }
-  moustacheCommentEnd { "{{!" }
   longMoustacheCommentStart { "{{!--" }
   longMoustacheCommentEnd { "--}}" }
+  moustacheCommentStart { "{{!" }
+  moustacheCommentEnd { "}}" }
 
   EndTag[openedBy="StartTag StartCloseTag"] { "/"? ">" }
   SelfClosingEndTag[openedBy=StartTag] { "/>" }

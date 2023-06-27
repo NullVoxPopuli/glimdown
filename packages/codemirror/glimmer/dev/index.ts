@@ -57,7 +57,7 @@ const testDoc = `
   {{{purify @dangerous}}}
 
   {{! inline simple }}
-  {{!-- inline long }}
+  {{!-- inline long --}}
 
   <OneLine ...attributes />
   <OneLine />
@@ -116,6 +116,20 @@ const testDoc = `
   {{outlet}}
 `;
 
+const moustacheCommentTest = `
+  {{! 
+    simple comment 
+  }}
+
+  just some text
+  {{call expression}}
+`;
+
+const adjacentCommentsTest = `
+  {{! inline simple }}
+  {{!-- inline long --}}
+`;
+
 const comment = `
 <!--
   HTML Comment
@@ -130,7 +144,9 @@ const comment = `
 `;
 
 const doc = testDoc;
+// const doc = adjacentCommentsTest;
 // const doc = comment;
+// const doc = moustacheCommentTest;
 
 const syncAST = EditorView.updateListener.of((update) => {
   if (update.docChanged || update.selectionSet) {
