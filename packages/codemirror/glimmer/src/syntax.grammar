@@ -220,14 +220,8 @@ MoustacheComment { moustacheCommentStart moustacheCommentContent* moustacheComme
 
 elementName {
   TagName |
-  ComponentName |
-  SvelteElementName
-}
-
-SvelteElementName {
-  @extend[@name=SvelteElementNamespace]<TagName, "svelte">
-  ":"
-  SvelteElementType
+  NamedBlock |
+  ComponentName
 }
 
 dr<name, term> {
@@ -392,9 +386,8 @@ blk<type> { @specialize[@name=BlockType]<BlockType, type> }
 
   TagName { tagNameStart nameChar* }
 
+  NamedBlock { ":" tagNameStart nameChar* }
   ComponentName { componentNameStart nameChar* }
-
-  SvelteElementType { @asciiLetter+ }
 
   attributeChar { ![.\u0000-\u0020\u007F-\u009F"'>/=|:{\uFDD0-\uFDEF\uFFFE\uFFFF] }
 
