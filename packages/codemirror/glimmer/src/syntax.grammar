@@ -62,6 +62,18 @@ LongMoustacheComment { longMoustacheCommentStart longMoustacheCommentContent* lo
 MoustacheComment { moustacheCommentStart moustacheCommentContent* moustacheCommentEnd }
 
 @skip { space } {
+
+  SExpression { 
+      // CallExpression
+      // | identifier
+      // | Is 
+      // | Pipe
+      Argument
+      //| String
+      // | keywords
+  }
+
+
   OpenTag[closedBy=CloseTag] {
     StartTag elementName attr* EndTag
   }
@@ -214,7 +226,7 @@ MoustacheComment { moustacheCommentStart moustacheCommentContent* moustacheComme
   }
   
   Interpolation {
-    "{{" LongExpression "}}"
+    "{{" (LongExpression | SExpression) "}}"
   }
 }
 
@@ -343,7 +355,7 @@ blk<type> { @specialize[@name=BlockType]<BlockType, type> }
   
   Variable { identifierChar (identifierChar | @digit | ".")* }
 
-  BlockPrefix { "#" | "@" | "/" | ":" }
+  BlockPrefix { "#" | "/" | ":" }
   BlockType { identifier }
 
   UnknownBlockContent { ![}]+ }
@@ -387,6 +399,8 @@ blk<type> { @specialize[@name=BlockType]<BlockType, type> }
   TagName { tagNameStart nameChar* }
 
   NamedBlock { ":" tagNameStart nameChar* }
+  Argument { "@" identifier }
+  Function { ~identifier }
   ComponentName { componentNameStart nameChar* }
 
   attributeChar { ![.\u0000-\u0020\u007F-\u009F"'>/=|:{\uFDD0-\uFDEF\uFFFE\uFFFF] }
