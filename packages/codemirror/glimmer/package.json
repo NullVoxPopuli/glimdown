@@ -35,7 +35,9 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@codemirror/lang-css": "^6.2.0",
     "@codemirror/lang-html": "^6.4.5",
+    "@codemirror/lang-javascript": "^6.1.9",
     "@lezer/common": "^1.0.3",
     "@lezer/highlight": "^1.1.6",
     "@lezer/html": "^1.3.4",
@@ -44,7 +46,7 @@
   },
   "scripts": {
     "dev": "node ./dev/watch.cjs src/index.ts",
-    "build": "rollup -c",
+    "build": "cm-buildhelper src/index.ts",
     "lint": "pnpm -w exec lint",
     "lint:fix": "pnpm -w exec lint fix",
     "lint:js": "pnpm -w exec lint js",
