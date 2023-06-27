@@ -2,9 +2,10 @@
 
 entity[@isGroup=Entity] {
   IfBlock |
+  UnlessBlock |
+  LetBlock |
   EachBlock |
-  AwaitBlock |
-  KeyBlock |
+  EachInBlock |
   RawHTMLBlock |
   DebugBlock |
   ConstBlock |
@@ -28,16 +29,20 @@ IfBlock[group=Block] {
   IfBlockOpen (ElseBlock | entity)* IfBlockClose
 }
 
+UnlessBlock[group=Block] {
+  UnlessBlockOpen (ElseBlock | entity)* UnlessBlockClose
+}
+
+LetBlock[group=Block] {
+  LetBlockOpen (entity)* LetBlockClose
+}
+
 EachBlock[group=Block] {
   EachBlockOpen (ElseBlock | entity)* EachBlockClose
 }
 
-AwaitBlock[group=Block] {
-  AwaitBlockOpen (ThenBlock | CatchBlock | entity)* AwaitBlockClose
-} 
-
-KeyBlock[group=Block] {
-  KeyBlockOpen entity* KeyBlockClose
+EachInBlock[group=Block] {
+  EachInBlockOpen (ElseBlock | entity)* EachInBlockClose
 }
 
 Element {
@@ -106,18 +111,19 @@ LongMoustacheComment { longMoustacheCommentStart longMoustacheCommentContent* lo
 
   attr {
     DirectlyInterpolatedAttribute |
-    SpreadInterpolatedAttribute |
     Directive |
     StyleAttribute |
-    Attribute
+    Attribute |
+    Splattributes 
+
   }
 
   DirectlyInterpolatedAttribute {
     "{" (DirectlyInterpolatedAttributeValue { identifier })? "}"
   }
 
-  SpreadInterpolatedAttribute {
-    "{" "..." LongExpression "}"
+  Splattributes {
+    "..." "attributes"
   }
 
   Directive {
@@ -130,26 +136,43 @@ LongMoustacheComment { longMoustacheCommentStart longMoustacheCommentContent* lo
     StyleAttributeName (Is (AttributeValue | UnquotedAttributeValue))?
   }
 
+
   Attribute {
     AttributeName
     ("|" Modifier)*
     (Is (AttributeValue | UnquotedAttributeValue))?
   }
+
+  LetBlockOpen[group=BlockOpen,closedBy=LetBlockClose] {
+    "{{" pfx<"#"> blk<"let"> LongExpression "}}"
+  }
+  
+  LetBlockClose[group=BlockClose,openedBy=LetBlockOpen] {
+    "{{" pfx<"/"> blk<"let"> "}}"
+  }
   
   IfBlockOpen[group=BlockOpen,closedBy=IfBlockClose] {
-    "{" pfx<"#"> blk<"if"> LongExpression "}"
+    "{{" pfx<"#"> blk<"if"> LongExpression "}}"
   }
   
   IfBlockClose[group=BlockClose,openedBy=IfBlockOpen] {
-    "{" pfx<"/"> blk<"if"> "}"
+    "{{" pfx<"/"> blk<"if"> "}}"
+  }
+
+  UnlessBlockOpen[group=BlockOpen,closedBy=UnlessBlockClose] {
+    "{{" pfx<"#"> blk<"unless"> LongExpression "}}"
+  }
+  
+  UnlessBlockClose[group=BlockClose,openedBy=UnlessBlockOpen] {
+    "{{" pfx<"/"> blk<"unless"> "}}"
   }
   
   ElseBlock[group=BlockInline] {
-    "{" pfx<":"> blk<"else"> (kw<"if"> LongExpression)? "}"
+    "{{" pfx<":">? blk<"else"> (kw<"if"> LongExpression)? "}}"
   }
 
   EachBlockOpen[group=BlockOpen,closedBy=EachBlockClose] {
-    "{" pfx<"#"> blk<"each">
+    "{{" pfx<"#"> blk<"each">
     ShortExpression
     kw<"as">
     ShortExpression
@@ -157,38 +180,27 @@ LongMoustacheComment { longMoustacheCommentStart longMoustacheCommentContent* lo
       ("(" LongExpression ")") |
       ("," Variable? ("(" LongExpression ")")?)
     )?
-    "}"
+    "}}"
   }
   
   EachBlockClose[group=BlockClose,openedBy=EachBlockOpen] {
-    "{" pfx<"/"> blk<"each"> "}"
+    "{{" pfx<"/"> blk<"each"> "}}"
   }
 
-  AwaitBlockOpen[group=BlockOpen,closedBy=AwaitBlockClose] {
-    "{" pfx<"#"> blk<"await">
+  EachInBlockOpen[group=BlockOpen,closedBy=EachInBlockClose] {
+    "{{" pfx<"#"> blk<"each-in">
     ShortExpression
-    ((kw<"then"> | kw<"catch">) ShortExpression)?
-    "}"
+    kw<"as">
+    ShortExpression
+    (
+      ("(" LongExpression ")") |
+      ("," Variable? ("(" LongExpression ")")?)
+    )?
+    "}}"
   }
   
-  AwaitBlockClose[group=BlockClose,closedBy=AwaitBlockOpen] {
-    "{" pfx<"/"> blk<"await"> "}"
-  }
-  
-  ThenBlock[group=BlockInline] {
-    "{" pfx<":"> blk<"then"> Variable? "}"
-  }
-  
-  CatchBlock[group=BlockInline] {
-    "{" pfx<":"> blk<"catch"> Variable? "}"
-  }
-
-  KeyBlockOpen[group=BlockOpen,closedBy=KeyBlockClose] {
-    "{" pfx<"#"> blk<"key"> LongExpression "}"
-  }
-  
-  KeyBlockClose[group=BlockClose,openedBy=KeyBlockOpen] {
-    "{" pfx<"/"> blk<"key"> "}"
+  EachInBlockClose[group=BlockClose,openedBy=EachInBlockOpen] {
+    "{{" pfx<"/"> blk<"each-in"> "}}"
   }
 
   RawHTMLBlock[group=BlockInline] {
@@ -204,15 +216,15 @@ LongMoustacheComment { longMoustacheCommentStart longMoustacheCommentContent* lo
   }
 
   UnknownBlock[group=BlockInline] {
-    "{"
+    "{{"
     BlockPrefix
     BlockType
     UnknownBlockContent?
-    "}"
+    "}}"
   }
   
   Interpolation {
-    "{" LongExpression "}"
+    "{{" LongExpression "}}"
   }
 }
 
@@ -330,6 +342,8 @@ blk<type> { @specialize[@name=BlockType]<BlockType, type> }
   
   "{"[closedBy="}"]
   "}"[openedBy="{"]
+  "{{"[closedBy="}}"]
+  "}}"[openedBy="{{"]
   "("[closedBy="("]
   ")"[openedBy=")"]
   "["[closedBy="]"]
@@ -392,7 +406,7 @@ blk<type> { @specialize[@name=BlockType]<BlockType, type> }
 
   SvelteElementType { @asciiLetter+ }
 
-  attributeChar { ![\u0000-\u0020\u007F-\u009F"'>/=|:{\uFDD0-\uFDEF\uFFFE\uFFFF] }
+  attributeChar { ![.\u0000-\u0020\u007F-\u009F"'>/=|:{\uFDD0-\uFDEF\uFFFE\uFFFF] }
 
   AttributeName { attributeChar+ }
   StyleAttributeName { "--" attributeChar+ }
