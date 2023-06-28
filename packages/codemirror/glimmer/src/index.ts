@@ -180,8 +180,21 @@ export const svelteLanguage = LRLanguage.define({
   },
 });
 
+import { parser as glimmerExpressionParser } from '@glimdown/lezer-glimmer-expression';
+
 export function svelte() {
-  return new LanguageSupport(svelteLanguage, [javascript().support, css().support, autoCloseTags]);
+  return new LanguageSupport(svelteLanguage, [
+    javascript().support,
+    css().support,
+    new LanguageSupport(
+      LRLanguage.define({
+        name: 'glimmer-expression',
+        parser: glimmerExpressionParser.configure({}),
+      }),
+      []
+    ),
+    autoCloseTags,
+  ]);
 }
 
 export const glimmer = svelte;

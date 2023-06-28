@@ -1,5 +1,7 @@
 import { parseMixed } from '@lezer/common';
-import { parser as javascriptParser } from '@lezer/javascript';
+
+// import { parser as javascriptParser } from '@lezer/javascript';
+import { parser as glimmerExpressiorParser } from '@glimdown/lezer-glimmer-expression';
 
 import {
   Element,
@@ -39,7 +41,8 @@ function maybeNest(node, input, tags) {
   return null;
 }
 
-const expressionParser = javascriptParser.configure({ top: 'SingleExpression' });
+const expressionParser = glimmerExpressiorParser;
+// javascriptParser.configure({ top: 'SingleExpression' });
 
 // tags: {
 //   tag: "script" | "style" | "textarea",

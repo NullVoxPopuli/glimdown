@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 patchedDependencies:
   '@changesets/assemble-release-plan@5.2.3':
     hash: oi6v6io33uxvojef6ezqzay4oy
@@ -310,6 +314,9 @@ importers:
       '@codemirror/lang-javascript':
         specifier: ^6.1.9
         version: 6.1.9
+      '@glimdown/lezer-glimmer-expression':
+        specifier: workspace:*
+        version: link:../../lezer/glimmer-expression
       '@lezer/common':
         specifier: ^1.0.3
         version: 1.0.3
@@ -688,6 +695,64 @@ importers:
       typescript:
         specifier: ^5.0.4
         version: 5.0.4
+
+  packages/lezer/glimmer-expression:
+    dependencies:
+      '@lezer/highlight':
+        specifier: ^1.1.6
+        version: 1.1.6
+      '@lezer/lr':
+        specifier: ^1.3.7
+        version: 1.3.7
+    devDependencies:
+      '@babel/core':
+        specifier: ^7.22.5
+        version: 7.22.5
+      '@babel/eslint-parser':
+        specifier: ^7.22.5
+        version: 7.22.5(@babel/core@7.22.5)(eslint@8.43.0)
+      '@glimdown/lezer-infra':
+        specifier: workspace:*
+        version: link:../../codemirror/-infra
+      '@lezer/generator':
+        specifier: ^1.3.0
+        version: 1.3.0
+      '@nullvoxpopuli/eslint-configs':
+        specifier: ^3.1.3
+        version: 3.1.3(@babel/core@7.22.5)(@babel/eslint-parser@7.22.5)(@typescript-eslint/eslint-plugin@5.60.0)(@typescript-eslint/parser@5.60.0)(eslint@8.43.0)(prettier@2.8.8)
+      '@rollup/plugin-node-resolve':
+        specifier: ^15.0.2
+        version: 15.0.2(rollup@3.21.7)
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^5.60.0
+        version: 5.60.0(@typescript-eslint/parser@5.60.0)(eslint@8.43.0)(typescript@5.0.4)
+      '@typescript-eslint/parser':
+        specifier: ^5.60.0
+        version: 5.60.0(eslint@8.43.0)(typescript@5.0.4)
+      eslint:
+        specifier: ^8.43.0
+        version: 8.43.0
+      prettier:
+        specifier: ^2.8.8
+        version: 2.8.8
+      rollup:
+        specifier: ^3.21.7
+        version: 3.21.7
+      typescript:
+        specifier: ^5.0.4
+        version: 5.0.4
+
+  packages/lezer/glimmer-expression/test:
+    devDependencies:
+      '@glimdown/lezer-glimmer-expression':
+        specifier: workspace:*
+        version: link:..
+      '@lezer/generator':
+        specifier: ^1.3.0
+        version: 1.3.0
+      vitest:
+        specifier: ^0.32.2
+        version: 0.32.2
 
   packages/remark/syntax:
     dependencies:
@@ -4337,14 +4402,14 @@ packages:
   /@types/fs-extra@5.1.0:
     resolution: {integrity: sha512-AInn5+UBFIK9FK5xc9yP5e3TQSPNNgjHByqYcj9g5elVBnDQcQL7PlO1CIRy2gWlbwK7UPYqi7vRvFA44dCmYQ==}
     dependencies:
-      '@types/node': 20.1.0
+      '@types/node': 20.3.1
     dev: true
 
   /@types/glob@8.1.0:
     resolution: {integrity: sha512-IO+MJPVhoqz+28h1qLAcBEH2+xHMK6MTyHJc7MTnnYb6wsoLR29POVGJ7LycmVXIqyy/4/2ShP5sUwTXuOwb/w==}
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 20.1.0
+      '@types/node': 20.3.1
     dev: true
 
   /@types/http-cache-semantics@4.0.1:
@@ -4403,10 +4468,6 @@ packages:
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
     dev: true
 
-  /@types/node@20.1.0:
-    resolution: {integrity: sha512-O+z53uwx64xY7D6roOi4+jApDGFg0qn6WHcxe5QeqjMaTezBO/mxdfFXIVAVVyNWKx84OmPB3L8kbVYOTeN34A==}
-    dev: true
-
   /@types/node@20.3.1:
     resolution: {integrity: sha512-EhcH/wvidPy1WeML3TtYFGR83UzjxeWRen9V402T8aUGYsCHOmfoisV3ZSg03gAFIbLq8TnWOJ0f4cALtnSEUg==}
     dev: true
@@ -4430,7 +4491,7 @@ packages:
     resolution: {integrity: sha512-YyP+VfeaqAyFmXoTh3HChxOQMyjByRMsHU7kc5KOJkSlXudhMhQIALbYV7rHh/l8d2lX3VUQzprrcAgWdRuU8g==}
     dependencies:
       '@types/glob': 8.1.0
-      '@types/node': 20.1.0
+      '@types/node': 20.3.1
     dev: true
 
   /@types/semver@6.2.3:
@@ -7356,7 +7417,7 @@ packages:
     resolution: {integrity: sha512-vg1j7fzKZUFR5TCsYQ3PABfBRMRi6V9K7mxcRh2MftO3gwAHBwYaPHtLHFDsKVSxdHmpu/GgT37lsRT+vezaKQ==}
     hasBin: true
     dependencies:
-      acorn: 8.8.2
+      acorn: 8.9.0
       acorn-walk: 8.2.0
       resolve: 1.22.2
       serve-static: 1.15.0
@@ -12013,7 +12074,7 @@ packages:
   /strip-literal@1.0.1:
     resolution: {integrity: sha512-QZTsipNpa2Ppr6v1AmJHESqJ3Uz247MUS0OjrnnZjFAvEoWqxuyFuXn2xLgMtRnijJShAa1HL0gtJyUs7u7n3Q==}
     dependencies:
-      acorn: 8.8.2
+      acorn: 8.9.0
     dev: true
 
   /style-loader@2.0.0:
@@ -12754,7 +12815,7 @@ packages:
       '@vitest/snapshot': 0.32.2
       '@vitest/spy': 0.32.2
       '@vitest/utils': 0.32.2
-      acorn: 8.8.2
+      acorn: 8.9.0
       acorn-walk: 8.2.0
       cac: 6.7.14
       chai: 4.3.7
