@@ -1,15 +1,11 @@
 @top Expression { SExpression* }
 
-Argument { "@" identifier }
-Function { ~identifier }
-
 @skip { space } {
 
   CallExpression { "(" ~Function SExpression? (identifier Is SExpression)? ")"  }
 
   SExpression { 
       CallExpression
-      | Function
       | identifier
       | Is 
       | Pipe
@@ -24,6 +20,8 @@ MemberExpression {
   expressionNoComma (("." | "?.") (PropertyName))
 }
 
+Argument { "@" identifier }
+Function { ~identifier }
 
 expressionNoComma {
   Number |
@@ -69,6 +67,7 @@ keywords {
   | kw<"on">
   | kw<"modifier"> | kw<"component"> | kw<"helper">
   | kw<"in-element">
+  | kw<"debugger">
   | kw<"yield"> | kw<"outlet">
 }
 
@@ -87,10 +86,6 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
   Is { "=" }
   Pipe { "|" }
 
-  templateTagStart[@name="TemplateTag", closedBy=templateTagEnd] { "<template>" }
-  templateTagEnd[@name="TemplateTag", openedBy=templateTagStart] { "</template>" }
-
-  
   identifierChar { @asciiLetter }
   word { identifierChar (identifierChar | @digit)* }
   identifier { word }
