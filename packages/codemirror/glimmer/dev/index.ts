@@ -6,7 +6,7 @@ import { basicSetup } from 'codemirror';
 
 import { printTree } from '@glimdown/codemirror-dev-preview/print-tree';
 
-import { glimmer, glimmerParser } from '../dist/';
+import { glimmer, glimmerParser } from '../dist/index.js';
 
 const testDoc = `
   {{! 
@@ -50,8 +50,14 @@ const testDoc = `
 
     Hello {{this.name}}!
 
+  {{log this.name}}
+
+  {{debugger}}
+
+  {{{purify @dangerous}}}
+
   {{! inline simple }}
-  {{!-- inline long }}
+  {{!-- inline long --}}
 
   <OneLine ...attributes />
   <OneLine />
@@ -110,7 +116,37 @@ const testDoc = `
   {{outlet}}
 `;
 
+const moustacheCommentTest = `
+  {{! 
+    simple comment 
+  }}
+
+  just some text
+  {{call expression}}
+`;
+
+const adjacentCommentsTest = `
+  {{! inline simple }}
+  {{!-- inline long --}}
+`;
+
+const comment = `
+<!--
+  HTML Comment
+  {{not a comment}}
+  {{!still a comment}}
+  {{!--still a comment--}}
+-->
+
+{{foo.bar}}
+{{#let greeting as |value|}}{{value}}{{/let}}
+<Boop {{auto-focus}}></Boop>
+`;
+
 const doc = testDoc;
+// const doc = adjacentCommentsTest;
+// const doc = comment;
+// const doc = moustacheCommentTest;
 
 const syncAST = EditorView.updateListener.of((update) => {
   if (update.docChanged || update.selectionSet) {

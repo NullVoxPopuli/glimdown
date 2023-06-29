@@ -11,4 +11,5 @@ packages:
   - "packages/glimdown/*"
   - "packages/remark/*"
   - "packages/lezer/*"
+  - "packages/lezer/*/*"
   - "packages/codemirror/*"

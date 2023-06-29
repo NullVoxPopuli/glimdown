@@ -1,27 +1,31 @@
 import { ExternalTokenizer } from '@lezer/lr';
 
 import {
-  commentContent as cmtToken,
-  LongExpression as longExprToken,
-  longMoustacheCommentContent as longMoustacheCmtToken,
-  moustacheCommentContent as moustacheCmtToken,
-  ShortExpression as shortExprToken,
+  EndBlock,
+  EndLongComment,
+  htmlCommentContent as _htmlCommentContent,
+  longCommentContent as _longCommentContent,
+  shortCommentContent as _shortCommentContent,
+  StartLongComment,
+  StartShortComment,
+} from './parser.terms.js';
+import {
+  // htmlCommentContent as htmlCommentToken,
+  // longCommentContent as longCommentToken,
+  MoustacheExpression as longExprToken,
+  // shortCommentContent as shortCommentToken,
+  // templateTagContent as templateTagToken,
 } from './syntax.grammar.terms';
 
 import type { InputStream } from '@lezer/lr';
 
-const space = [
-  9, 10, 11, 12, 13, 32, 133, 160, 5760, 8192, 8193, 8194, 8195, 8196, 8197, 8198, 8199, 8200, 8201,
-  8202, 8232, 8233, 8239, 8287, 12288,
-];
-
+// Ascii values
 const parenOpen = 40;
 const parenClose = 41;
 const squareOpen = 91;
 const squareClose = 93;
 const curlyOpen = 123;
 const curlyClose = 125;
-const comma = 44;
 const colon = 58;
 const hash = 35;
 const at = 64;
@@ -37,7 +41,48 @@ const tick = 96;
 
 const prefixes = [colon, hash, at, slash];
 
-function scanTo(type, end) {
+const shortCommentEnd = [curlyClose, curlyClose];
+const longCommentEnd = [dash, dash, curlyClose, curlyClose];
+const htmlCommentEnd = [dash, dash, greaterThan];
+
+// Is there a way to make this a build time (rather than eval-time?) operation?
+const closingTemplateTag = '</template>'.split('').map((char) => char.charCodeAt(0));
+
+export function matchForComment(commentEndPattern: number[], commentToken: number, input: any) {
+  for (let found = 0, i = 0; ; i++) {
+    if (input.next < 0) {
+      if (i) input.acceptToken(commentToken);
+
+      break;
+    }
+
+    let hasMatch = commentEndPattern[found] === input.next;
+
+    if (!hasMatch) {
+      found = 0;
+      input.advance();
+
+      break;
+    }
+
+    if (found === commentEndPattern.length - 1) {
+      if (i > commentEndPattern.length - 1) {
+        input.acceptToken(commentToken, 1 - commentEndPattern.length);
+
+        break;
+      } else {
+        console.warn('Reached end of comment but there is still content left');
+      }
+
+      break;
+    }
+
+    found++;
+    input.advance();
+  }
+}
+
+export function scanTo(type: number, end: string) {
   return new ExternalTokenizer((input) => {
     for (let endPos = 0, len = 0; ; len++) {
       if (input.next < 0) {
@@ -63,30 +108,25 @@ function scanTo(type, end) {
   });
 }
 
-export const moustacheCommentContent = scanTo(moustacheCmtToken, '}}');
-export const longMoustacheCommentContent = scanTo(longMoustacheCmtToken, '--}}');
+export const shortCommentContent = scanTo(_shortCommentContent, '}}');
+export const longCommentContent = scanTo(_longCommentContent, '--}}');
+export const htmlCommentContent = scanTo(_htmlCommentContent, '-->');
 
-export const commentContent = new ExternalTokenizer((input) => {
-  for (let dashes = 0, i = 0; ; i++) {
-    if (input.next < 0) {
-      if (i) input.acceptToken(cmtToken);
+// export const shortCommentContent = new ExternalTokenizer((input) => {
+//   return matchForComment(shortCommentEnd, shortCommentToken, input);
+// });
 
-      break;
-    }
+// export const longCommentContent = new ExternalTokenizer((input) => {
+//   return matchForComment(longCommentEnd, longCommentToken, input);
+// });
 
-    if (input.next == dash) {
-      dashes++;
-    } else if (input.next == greaterThan && dashes >= 2) {
-      if (i > 3) input.acceptToken(cmtToken, -2);
+// export const htmlCommentContent = new ExternalTokenizer((input) => {
+//   return matchForComment(htmlCommentEnd, htmlCommentToken, input);
+// });
 
-      break;
-    } else {
-      dashes = 0;
-    }
-
-    input.advance();
-  }
-});
+// export const templateTagContent = new ExternalTokenizer((input) => {
+//   return matchForComment(closingTemplateTag, templateTagToken, input);
+// });
 
 // TODO: string handler does not handle interpolation
 
@@ -199,8 +239,10 @@ function createCommentHandler(input: InputStream) {
   };
 }
 
+type ExpressionStack = '(' | '{' | '{{' | '[';
+
 // closes on a delimiter that probably isn't in the expression
-export const longExpression = new ExternalTokenizer((input) => {
+export const expression = new ExternalTokenizer((input) => {
   if (prefixes.includes(input.next)) {
     return;
   }
@@ -208,9 +250,9 @@ export const longExpression = new ExternalTokenizer((input) => {
   const commentHandler = createCommentHandler(input);
   const stringHandler = createStringHandler(input);
 
-  let stack: ('(' | '{' | '[')[] = [];
+  let stack: ExpressionStack[] = [];
 
-  const popIfMatch = (match: '(' | '{' | '[') => {
+  const popIfMatch = (match: ExpressionStack) => {
     const idx = stack.lastIndexOf(match);
 
     if (idx !== -1) {
@@ -242,105 +284,31 @@ export const longExpression = new ExternalTokenizer((input) => {
       break;
     }
 
-    // prettier-ignore
     switch (input.next) {
-      case parenOpen:   stack.push("(");
+      case parenOpen:
+        stack.push('(');
 
- break
-      case parenClose:  popIfMatch("(");
+        break;
+      case parenClose:
+        popIfMatch('(');
 
- break
-      case squareOpen:  stack.push("[");
+        break;
+      case squareOpen:
+        stack.push('[');
 
- break
-      case squareClose: popIfMatch("[");
+        break;
+      case squareClose:
+        popIfMatch('[');
 
- break
-      case curlyOpen:   stack.push("{");
+        break;
+      case curlyOpen:
+        stack.push('{');
 
- break
-      case curlyClose:  popIfMatch("{");
+        break;
+      case curlyClose:
+        popIfMatch('{');
 
- break
-    }
-
-    input.advance();
-  }
-});
-
-// same as long expression but will close on either a space or comma
-// that is reasonably not inside of the expression
-export const shortExpression = new ExternalTokenizer((input) => {
-  if (prefixes.includes(input.peek(0))) {
-    return;
-  }
-
-  const commentHandler = createCommentHandler(input);
-  const stringHandler = createStringHandler(input);
-
-  let stack: ('(' | '{' | '[')[] = [];
-
-  const popIfMatch = (match: '(' | '{' | '[') => {
-    const idx = stack.lastIndexOf(match);
-
-    if (idx !== -1) {
-      while (stack.length > idx) {
-        stack.pop();
-      }
-    }
-  };
-
-  for (let pos = 0; ; pos++) {
-    // end of input
-    if (input.next < 0) {
-      if (pos > 0) input.acceptToken(shortExprToken);
-
-      break;
-    }
-
-    if (commentHandler() || stringHandler()) {
-      input.advance();
-      continue;
-    }
-
-    if (
-      stack.length === 0 &&
-      (input.next === curlyClose ||
-        input.next === parenClose ||
-        input.next === squareClose ||
-        input.next === comma)
-    ) {
-      input.acceptToken(shortExprToken);
-
-      break;
-    }
-
-    // prettier-ignore
-    switch (input.next) {
-      case parenOpen:   stack.push("(");
-
- break
-      case parenClose:  popIfMatch("(");
-
- break
-      case squareOpen:  stack.push("[");
-
- break
-      case squareClose: popIfMatch("[");
-
- break
-      case curlyOpen:   stack.push("{");
-
- break
-      case curlyClose:  popIfMatch("{");
-
- break
-    }
-
-    if (pos !== 0 && stack.length === 0 && space.includes(input.next)) {
-      input.acceptToken(shortExprToken);
-
-      break;
+        break;
     }
 
     input.advance();
