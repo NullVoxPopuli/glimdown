@@ -18,7 +18,7 @@
     "@changesets/cli": "^2.26.1",
     "@glimdown/dev": "workspace:*",
     "concurrently": "^8.2.0",
-    "turbo": "1.10.9"
+    "turbo": "1.10.10"
   },
   "engines": {
     "node": ">= 18.*",
