@@ -584,8 +584,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.22.5)
       '@glimmer/syntax':
-        specifier: ^0.84.3
-        version: 0.84.3
+        specifier: ^0.85.0
+        version: 0.85.3
       '@nullvoxpopuli/eslint-configs':
         specifier: ^3.1.3
         version: 3.1.3(@babel/core@7.22.5)(@babel/eslint-parser@7.22.5)(@typescript-eslint/eslint-plugin@5.60.0)(@typescript-eslint/parser@5.60.0)(eslint@8.43.0)(prettier@2.8.8)
@@ -597,7 +597,7 @@ importers:
         version: 5.60.0(eslint@8.43.0)(typescript@5.0.4)
       ember-repl:
         specifier: ^3.0.0-beta.0
-        version: 3.0.0-beta.0(@glimmer/compiler@0.85.3)(@glimmer/component@1.1.2)(@glimmer/syntax@0.84.3)(ember-source@5.0.0)
+        version: 3.0.0-beta.0(@glimmer/compiler@0.85.3)(@glimmer/component@1.1.2)(@glimmer/syntax@0.85.3)(ember-source@5.0.0)
       ember-source:
         specifier: ^5.0.0
         version: 5.0.0(@babel/core@7.22.5)(@glimmer/component@1.1.2)
@@ -6883,7 +6883,7 @@ packages:
       - supports-color
     dev: true
 
-  /ember-repl@3.0.0-beta.0(@glimmer/compiler@0.85.3)(@glimmer/component@1.1.2)(@glimmer/syntax@0.84.3)(ember-source@5.0.0):
+  /ember-repl@3.0.0-beta.0(@glimmer/compiler@0.85.3)(@glimmer/component@1.1.2)(@glimmer/syntax@0.85.3)(ember-source@5.0.0):
     resolution: {integrity: sha512-+o60X2+IyDXfsC6Bxaxy8RS5XWyCj3fwD0zGN8GXwGOSYtgrPP9tIaW110mUvIstzjrEFSEVAmrMW6fUgO2k0Q==}
     peerDependencies:
       '@glimmer/compiler': ^0.84.3
@@ -6897,7 +6897,7 @@ packages:
       '@embroider/macros': 1.10.0
       '@glimmer/compiler': 0.85.3
       '@glimmer/component': 1.1.2(@babel/core@7.22.5)
-      '@glimmer/syntax': 0.84.3
+      '@glimmer/syntax': 0.85.3
       babel-import-util: 1.3.0
       babel-plugin-ember-template-compilation: 2.0.2
       broccoli-file-creator: 2.1.1
