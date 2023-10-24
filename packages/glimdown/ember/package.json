@@ -17,7 +17,7 @@
   "devDependencies": {
     "@babel/core": "^7.22.5",
     "@babel/eslint-parser": "^7.22.5",
-    "@glimmer/compiler": "^0.84.3",
+    "@glimmer/compiler": "^0.85.0",
     "@glimmer/component": "^1.1.2",
     "@glimmer/syntax": "^0.84.3",
     "@nullvoxpopuli/eslint-configs": "^3.1.3",
